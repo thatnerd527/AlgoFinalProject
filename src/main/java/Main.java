@@ -4,7 +4,7 @@ class Main {
   public static void main(String[] args) {
     Table testtable = new Table();
     testtable.columnames.add("Column 1");
-    testtable.columnames.add("Column 2");
+    testtable.columnames.add("Column ke-2");
     testtable.columnames.add("Column 3dddddddddddddddddddddddddddddddddddddddddddd");
     {
       // Row 1
