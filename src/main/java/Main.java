@@ -5,7 +5,7 @@ class Main {
     Table testtable = new Table();
     testtable.columnames.add("Column 1");
     testtable.columnames.add("Column ke-2");
-    testtable.columnames.add("Column 3dddddddddddddddddddddddddddddddddddddddddddd");
+    testtable.columnames.add("Something else");
     {
       // Row 1
       ArrayList<String> row1 = new ArrayList<String>();
