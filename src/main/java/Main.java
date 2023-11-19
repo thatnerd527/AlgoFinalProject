@@ -1,11 +1,17 @@
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+
+import Material.Material;
+import Material.MaterialBuilder;
+import Material.MaterialDatabase;
 
 class Main {
   public static void main(String[] args) {
     Table testtable = new Table();
     testtable.columnames.add("Column 1");
     testtable.columnames.add("Column ke-2");
-    testtable.columnames.add("Something else");
+    testtable.columnames.add("Column 3dddddddddddddddddddddddddddddddddddddddddddd");
     {
       // Row 1
       ArrayList<String> row1 = new ArrayList<String>();
@@ -33,8 +39,14 @@ class Main {
       testtable.rowsandcolumns.add(row1);
     }
 
-    System.out.print(Table.getPrintedTable(testtable,true));
+    System.out.print(Table.getPrintedTable(testtable, true));
 
+    // Serialization test
+
+
+    MaterialDatabase dat = new MaterialDatabase();
+    dat.addMaterial(new MaterialBuilder().build());
+    dat.save();
 
   }
 }
