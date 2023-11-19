@@ -44,8 +44,6 @@ public class Material implements Serializable {
         this.composite = composite;
     }
 
-
-
     public Material() {
     }
 
@@ -68,7 +66,7 @@ public class Material implements Serializable {
                 Double.toString(valuePerQty) +
                 Double.toString(overrideValue) +
                 differentiator +
-                lifespanStart.toString().hashCode()+
+                lifespanStart.toString().hashCode() +
                 composite.cumulativeID()).hashCode();
     }
 
@@ -112,6 +110,26 @@ public class Material implements Serializable {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public ArrayList<Material> getAllSubMaterials(boolean inclusive, boolean clone) {
+        ArrayList<Material> submaterials = new ArrayList<>();
+        if (inclusive) {
+            if (clone) {
+                submaterials.add(clone());
+            } else {
+                submaterials.add(this);
+            }
+        }
+        composite.materials().forEach(m -> {
+            if (clone) {
+                submaterials.add(m.clone());
+            } else {
+                submaterials.add(m);
+            }
+            submaterials.addAll(m.getAllSubMaterials(false, clone));
+        });
+        return submaterials;
     }
 
     @Override

@@ -55,7 +55,7 @@ public class MaterialComposite implements Serializable {
     }
 
     public ArrayList<Material> materials() {
-        return materials;
+        return new ArrayList<>(materials);
     }
 
     public MaterialComposite clone() {
