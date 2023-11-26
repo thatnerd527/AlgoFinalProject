@@ -1,3 +1,4 @@
+package UI;
 import java.util.ArrayList;
 
 public class Table {
@@ -6,6 +7,20 @@ public class Table {
 
     public void addRow(ArrayList<String> row) {
         rowsandcolumns.add(row);
+    }
+
+    public void addRow(String... vara) {
+        ArrayList<String> res = new ArrayList<>();
+        for (String iterable_element : vara) {
+            res.add(iterable_element);
+        }
+        rowsandcolumns.add(res);
+    }
+
+    public void addColumnNames(String... names) {
+        for (String element : names) {
+            columnames.add(element);
+        }
     }
 
     public static String getPrintedTable(Table table, boolean withheader) {

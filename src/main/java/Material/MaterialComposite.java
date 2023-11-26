@@ -2,6 +2,10 @@ package Material;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 public class MaterialComposite implements Serializable {
     private ArrayList<Material> materials = new ArrayList<Material>();
 
@@ -56,6 +60,14 @@ public class MaterialComposite implements Serializable {
 
     public ArrayList<Material> materials() {
         return new ArrayList<>(materials);
+    }
+
+    public ArrayList<Material> materialsSub() {
+        return new ArrayList<Material>(
+                materials.stream()
+            .map((Material x) -> x.getAllSubMaterials(true, true))
+                .flatMap(List::stream)
+                .collect(Collectors.toList()));
     }
 
     public MaterialComposite clone() {

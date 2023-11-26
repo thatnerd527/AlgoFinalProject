@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.stream.Stream;
@@ -24,14 +25,14 @@ public class Material implements Serializable {
 
     public double quantity = 0;
 
-    public Date lifespanStart = new Date(0);
+    public Instant lifespanStart = Instant.now();
 
-    public double lifespan = 0;
+    public long lifespanInSeconds = 0;
 
     public MaterialComposite composite = new MaterialComposite();
 
     public Material(String name, String description, String differentiator, ArrayList<String> tags, double valuePerQty,
-            double overrideValue, double quantity, Date lifespanStart, double lifespan, MaterialComposite composite) {
+            double overrideValue, double quantity, Instant lifespanStart, long lifespan, MaterialComposite composite) {
         this.name = name;
         this.description = description;
         this.differentiator = differentiator;
@@ -40,7 +41,7 @@ public class Material implements Serializable {
         this.overrideValue = overrideValue;
         this.quantity = quantity;
         this.lifespanStart = lifespanStart;
-        this.lifespan = lifespan;
+        this.lifespanInSeconds = lifespan;
         this.composite = composite;
     }
 
@@ -48,7 +49,7 @@ public class Material implements Serializable {
     }
 
     public Material(String name, String description, String differentiator, ArrayList<String> tags, double valuePerQty,
-            double overrideValue, double quantity, Date lifespanStart, double lifespan, ArrayList<Material> composite) {
+            double overrideValue, double quantity, Instant lifespanStart, long lifespan, ArrayList<Material> composite) {
         this.name = name;
         this.description = description;
         this.differentiator = differentiator;
@@ -57,12 +58,12 @@ public class Material implements Serializable {
         this.overrideValue = overrideValue;
         this.quantity = quantity;
         this.lifespanStart = lifespanStart;
-        this.lifespan = lifespan;
+        this.lifespanInSeconds = lifespan;
         this.composite = new MaterialComposite(composite);
     }
 
     public Integer MaterialID() {
-        return (Double.toString(lifespan) +
+        return (Double.toString(lifespanInSeconds) +
                 Double.toString(valuePerQty) +
                 Double.toString(overrideValue) +
                 differentiator +
@@ -71,7 +72,7 @@ public class Material implements Serializable {
     }
 
     public Integer MaterialIDWithQuantity() {
-        return (Double.toString(lifespan) +
+        return (Double.toString(lifespanInSeconds) +
                 Double.toString(valuePerQty) +
                 Double.toString(overrideValue) +
                 differentiator +
@@ -86,7 +87,7 @@ public class Material implements Serializable {
             clonedTags.add(String.valueOf(tag));
         }
         return new Material(String.valueOf(name), String.valueOf(description), String.valueOf(differentiator), tags,
-                valuePerQty, overrideValue, quantity, Date.from(lifespanStart.toInstant()), lifespan, composite);
+                valuePerQty, overrideValue, quantity, Instant.parse(lifespanStart.toString()), lifespanInSeconds, composite);
     }
 
     public Material loadfrom(byte[] loadfrom) {
@@ -98,6 +99,11 @@ public class Material implements Serializable {
             return null;
 
         }
+    }
+
+    public boolean isExpired() {
+        Instant now = Instant.now();
+        return now.isAfter(lifespanStart.plusSeconds(lifespanInSeconds));
     }
 
     public byte[] serialize() {

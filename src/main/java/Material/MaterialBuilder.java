@@ -1,5 +1,6 @@
 package Material;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,8 +12,8 @@ public class MaterialBuilder {
     private double valuePerQty;
     private double overrideValue;
     private double quantity;
-    private Date lifespanStart = new Date(0);;
-    private double lifespan;
+    private Instant lifespanStart = Instant.now();
+    private long lifespanInSeconds;
     private MaterialComposite composite = new MaterialComposite();
 
     public MaterialBuilder withName(String name) {
@@ -50,13 +51,13 @@ public class MaterialBuilder {
         return this;
     }
 
-    public MaterialBuilder withLifespanStart(Date lifespanStart) {
+    public MaterialBuilder withLifespanStart(Instant lifespanStart) {
         this.lifespanStart = lifespanStart;
         return this;
     }
 
-    public MaterialBuilder withLifespan(double lifespan) {
-        this.lifespan = lifespan;
+    public MaterialBuilder withLifespanSeconds(long lifespan) {
+        this.lifespanInSeconds = lifespan;
         return this;
     }
 
@@ -67,6 +68,6 @@ public class MaterialBuilder {
 
     public Material build() {
         return new Material(name, description, differentiator, tags, valuePerQty, overrideValue, quantity,
-                lifespanStart, lifespan, composite);
+                lifespanStart, lifespanInSeconds, composite);
     }
 }

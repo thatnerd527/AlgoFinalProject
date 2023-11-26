@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 import java.util.stream.Stream;
 
 public class MaterialDatabase extends MaterialComposite {
-    public MaterialDatabase load(byte[] loadfrom) {
+    public static MaterialDatabase load(byte[] loadfrom) {
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream((InputStream) Stream.of(loadfrom));
             MaterialDatabase material = (MaterialDatabase) objectInputStream.readObject();

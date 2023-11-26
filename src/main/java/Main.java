@@ -1,10 +1,14 @@
 import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
-import Material.Material;
 import Material.MaterialBuilder;
 import Material.MaterialDatabase;
+import Server.Server;
+import Server.Session;
+import UI.Table;
 
 class Main {
   public static void main(String[] args) {
@@ -39,14 +43,19 @@ class Main {
       testtable.rowsandcolumns.add(row1);
     }
 
-    System.out.print(Table.getPrintedTable(testtable, true));
+   // System.out.print(Table.getPrintedTable(testtable, true));
 
     // Serialization test
 
 
-    MaterialDatabase dat = new MaterialDatabase();
-    dat.addMaterial(new MaterialBuilder().build());
-    dat.save();
+   MaterialDatabase dat = new MaterialDatabase();
+   dat.addMaterial(new MaterialBuilder().build());
+   dat.save();
+   Server.StaticInit();
+   Session ses = new Session(new OutputStreamWriter(System.out), new InputStreamReader(System.in), (e) -> {
+     System.out.println(e.getMessage());
+   });
+   ses.startSession();
 
   }
 }
