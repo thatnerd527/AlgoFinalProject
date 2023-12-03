@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 public
 class WrappedWriter extends Writer {
-    private final Writer _writer;
+    public Writer _writer;
     private final Consumer<IOException> _onDisconnect;
 
     public WrappedWriter(Writer writer, Consumer<IOException> onDisconnect) {
@@ -16,6 +16,12 @@ class WrappedWriter extends Writer {
         assertNotNull(onDisconnect);
         _writer = writer;
         _onDisconnect = onDisconnect;
+    }
+
+    public WrappedWriter(Writer writer) {
+        assertNotNull(writer);
+        _writer = writer;
+        _onDisconnect = e -> { };
     }
 
     @Override

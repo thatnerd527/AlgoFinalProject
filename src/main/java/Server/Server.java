@@ -1,10 +1,17 @@
 package Server;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.Scanner;
 
 import Material.MaterialDatabase;
 
@@ -25,11 +32,38 @@ public class Server {
         wr.write(new String(arr).toCharArray());
     }
 
+    static void StartServer() {
+        new Thread(() -> {
+            try {
+                ServerSocket serverSocket = new ServerSocket(6868);
+                while (true) {
+                    Socket client = serverSocket.accept();
+
+                    // get sesison id
+                    String session = "";
+                    Scanner a = new Scanner(client.getInputStream());
+                    try {
+                        session = a.nextLine();
+                        System.out.println("Session id: " + session);
+                        SessionManager.joinByString(session,new InputStreamReader(client.getInputStream()), new OutputStreamWriter(client.getOutputStream()));
+                    } catch (IOException e) {
+                        System.out.println("Could not get session id.");
+                    }
+
+                }
+            } catch (IOException e) {
+                System.out.println("Server closed.");
+            }
+        }).start();
+    }
+
     public static void StaticInit() {
+        System.out.println("Starting as server.");
         try {
             currentlystored = MaterialDatabase.load(readAsBytes(new File(("./current.bin"))));
             templatematerials = MaterialDatabase.load(readAsBytes(new File("./template.bin")));
 
+            StartServer();
         } catch (IOException e) {
             try {
                 saveToWriter(new FileWriter("./current.bin"), currentlystored.save());

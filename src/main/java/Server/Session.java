@@ -23,15 +23,28 @@ public class Session {
 
     private Reader r;
 
+    public WrappedReader wR;
+
+    public WrappedWriter wW;
+
+    private boolean disconnected = false;
+
     public Session(Writer out, Reader in, Consumer<IOException> onD) {
         onDisconnect = onD;
         w = out;
         r = in;
     }
 
-    public void startSession() {
-        WrappedReader wR = new WrappedReader(r, onDisconnect);
-        WrappedWriter wW = new WrappedWriter(w, onDisconnect);
+    public Session startSession() {
+        System.out.println("Session started");
+        wR = new WrappedReader(r, (e) -> {
+            onDisconnect.accept(e);
+            disconnected = true;
+        });
+        wW = new WrappedWriter(w, (e) -> {
+            onDisconnect.accept(e);
+            disconnected = true;
+        });
         wW.write("If you lose connection, this is your session ID: " + sessionid + "\n");
         while (true) {
 
@@ -52,6 +65,7 @@ public class Session {
                     break;
                 case "3":
                     wR.close();
+                    wW.close();
                     break;
                 case "4":
 
@@ -61,5 +75,6 @@ public class Session {
                     break;
             }
         }
+
     }
 }

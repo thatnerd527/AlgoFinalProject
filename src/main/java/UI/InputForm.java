@@ -24,6 +24,12 @@ public class InputForm {
 
     }
 
+    public InputForm(WrappedWriter wW, WrappedReader wR) {
+        this.wR = wR;
+        this.wW = wW;
+
+    }
+
     public void addField(String field, boolean required) {
         fields.put(field, new HashMap<String, Boolean>() {
             {
@@ -72,7 +78,7 @@ public class InputForm {
                 while (true) {
                     wW.write(x + ": ");
                     String input = scanner.nextLine();
-
+                    System.out.println(input);
                     StringBuilder keyname = new StringBuilder();
                     fields.get(x).keySet().forEach(x2 -> {
                         keyname.append(x2);

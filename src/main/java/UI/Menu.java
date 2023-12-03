@@ -67,11 +67,21 @@ public class Menu {
     public String makeASelection(WrappedWriter out, WrappedReader read) {
 
         Scanner scanner = new Scanner(read);
+        boolean skipbuild = false;
         while (true) {
 
-            out.write(build());
-            out.write("Make a selection: ");
+            if (!skipbuild) {
+                out.write(build());
+                out.write("Make a selection: \n");
+                skipbuild = false;
+            }
+
             String choice = scanner.nextLine();
+            if (choice.length() == 0) {
+                skipbuild = true;
+
+                continue;
+            }
             if (!getIndexes().contains(choice)) {
                 out.write("That is not an option. \n");
                 continue;

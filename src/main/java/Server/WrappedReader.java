@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 public class WrappedReader extends Reader {
 
-    private Reader _reader;
+    public Reader _reader;
 
     private Consumer<IOException> _onDisconnect;
 
@@ -17,6 +17,13 @@ public class WrappedReader extends Reader {
         assertNotNull(onDisconnect);
         _reader = reader;
         _onDisconnect = onDisconnect;
+    }
+
+    public WrappedReader(Reader reader) {
+        assertNotNull(reader);
+        _reader = reader;
+        _onDisconnect = e -> {
+        };
     }
 
     @Override
