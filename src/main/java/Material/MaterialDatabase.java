@@ -1,24 +1,20 @@
 package Material;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.stream.Stream;
 
 public class MaterialDatabase extends MaterialComposite {
-    public static MaterialDatabase load(byte[] loadfrom) {
-        try {
-            ObjectInputStream objectInputStream = new ObjectInputStream((InputStream) Stream.of(loadfrom));
-            MaterialDatabase material = (MaterialDatabase) objectInputStream.readObject();
-            return material;
-        } catch (Exception e) {
-            return null;
-
-        }
+    public synchronized static MaterialDatabase load(byte[] loadfrom) throws IOException, ClassNotFoundException {
+        ObjectInputStream objectInputStream = new ObjectInputStream((InputStream) Stream.of(loadfrom));
+        MaterialDatabase material = (MaterialDatabase) objectInputStream.readObject();
+        return material;
     }
 
-    public byte[] save() {
+    public synchronized byte[] save() {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);

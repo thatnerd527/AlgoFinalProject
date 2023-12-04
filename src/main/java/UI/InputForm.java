@@ -76,7 +76,7 @@ public class InputForm {
         while (true) {
             fields.keySet().forEach(x -> {
                 while (true) {
-                    wW.write(x + ": ");
+                    wW.write(x + ": \n");
                     String input = scanner.nextLine();
                     //System.out.println(input);
                     StringBuilder keyname = new StringBuilder();

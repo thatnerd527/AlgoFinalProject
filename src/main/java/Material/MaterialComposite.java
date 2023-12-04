@@ -63,11 +63,17 @@ public class MaterialComposite implements Serializable {
     }
 
     public ArrayList<Material> materialsSub() {
-        return new ArrayList<Material>(
+        MaterialComposite comp = new MaterialComposite();
+        new ArrayList<Material>(
                 materials.stream()
-            .map((Material x) -> x.getAllSubMaterials(true, true))
-                .flatMap(List::stream)
-                .collect(Collectors.toList()));
+                        .map((Material x) -> x.getAllSubMaterials(true, true))
+                        .flatMap(List::stream)
+                        .collect(Collectors.toList()))
+                .forEach((Material material) -> {
+                    comp.addMaterial(material);
+                });
+        return comp.materials();
+
     }
 
     public MaterialComposite clone() {

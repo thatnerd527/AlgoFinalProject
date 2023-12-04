@@ -1,16 +1,13 @@
 package Server;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Scanner;
 
 import Material.MaterialDatabase;
@@ -64,16 +61,19 @@ public class Server {
             templatematerials = MaterialDatabase.load(readAsBytes(new File("./template.bin")));
 
             StartServer();
-        } catch (IOException e) {
+        } catch (Exception e) {
             try {
+                currentlystored = new MaterialDatabase();
+                templatematerials = new MaterialDatabase();
                 saveToWriter(new FileWriter("./current.bin"), currentlystored.save());
                 saveToWriter(new FileWriter("./template.bin"), templatematerials.save());
+                StartServer();
             } catch (IOException e2) {
             }
         }
     }
 
-    public static void SaveAll() {
+    public synchronized static void SaveAll() {
         try {
 
             FileWriter cur = new FileWriter("./current.bin");
