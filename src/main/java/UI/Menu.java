@@ -84,6 +84,7 @@ public class Menu {
             }
             if (!getIndexes().contains(choice)) {
                 out.write("That is not an option. \n");
+                skipbuild = false;
                 continue;
             }
             //scanner.close();

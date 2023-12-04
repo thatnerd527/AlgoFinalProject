@@ -1,7 +1,5 @@
 package Server;
 
-import java.io.Reader;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -65,7 +63,7 @@ public class InterruptibleReader {
     public void interrupt() {
         if (!manual && !returned) {
             manual = true;
-            System.out.println("1111");
+            //System.out.println("1111");
             locked.interrupt();
             reader.interrupt();
         }

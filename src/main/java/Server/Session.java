@@ -36,7 +36,7 @@ public class Session {
     }
 
     public Session startSession() {
-        System.out.println("Session started");
+        //System.out.println("Session started");
         wR = new WrappedReader(r, (e) -> {
             onDisconnect.accept(e);
             disconnected = true;

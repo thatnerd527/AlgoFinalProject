@@ -28,14 +28,13 @@ class Main {
       InterruptibleReader rdr = new InterruptibleReader(System.in);
       Thread t = new Thread(() -> {
 
-
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
 
           out.write(sessionid);
           out.newLine();
           out.flush();
 
-          String strread = "0";
+          String strread = "";
           while (!strread.startsWith("\0")) {
             strread = rdr.readLine();
             out.write(strread);
@@ -56,7 +55,8 @@ class Main {
           System.out.println(serverResponse);
         }
         socket.close();
-      } catch (IOException e) {}
+      } catch (IOException e) {
+      }
       rdr.interrupt();
       // Read output from the socket and print it to system.out
 

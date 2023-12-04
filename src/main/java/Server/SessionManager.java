@@ -10,8 +10,7 @@ public class SessionManager {
     private static ArrayList<Session> sessions = new ArrayList<Session>();
 
     public static Session joinByString(String str, Reader r, Writer w) {
-        Optional<Session> session = sessions.stream()
-                .filter(s -> s.sessionid.toString().equals(str)).findFirst();
+        Optional<Session> session = sessions.stream().filter(s -> s.sessionid.toString().equals(str)).findFirst();
         if (session.isPresent()) {
             session.get().wR._reader = r;
             session.get().wW._writer = w;
