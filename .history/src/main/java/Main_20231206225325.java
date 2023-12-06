@@ -39,7 +39,9 @@ class Main {
           while (!strread.startsWith("\0")) {
             strread = rdr.readLine();
             if (strread.length() == 0) {
-              if (!tryagain) {
+              if (tryagain) {
+                tryagain = false;
+              } else {
                 tryagain = true;
                 continue;
               }

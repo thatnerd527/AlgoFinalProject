@@ -35,16 +35,17 @@ class Main {
           out.flush();
 
           String strread = "";
-          boolean tryagain = false;
+          boolean odd = false;
           while (!strread.startsWith("\0")) {
             strread = rdr.readLine();
             if (strread.length() == 0) {
-              if (!tryagain) {
-                tryagain = true;
+              if (odd) {
+                odd = false;
+              } else {
+                odd = true;
                 continue;
               }
             }
-            tryagain = false;
             out.write(strread);
             out.newLine();
             out.flush();

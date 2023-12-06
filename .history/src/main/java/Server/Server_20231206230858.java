@@ -71,8 +71,6 @@ public class Server {
                 FileWriter template = new FileWriter("./template.bin");
                 saveToWriter(cur, currentlystored.save());
                 saveToWriter(template, templatematerials.save());
-                cur.flush();
-                template.flush();
                 cur.close();
                 template.close();
                 StartServer();
@@ -91,11 +89,6 @@ public class Server {
 
             saveToWriter(cur, currentlystored.save());
             saveToWriter(template, templatematerials.save());
-
-            cur.flush();
-            cur.close();
-            template.flush();
-            template.close();
         } catch (Exception e) {
             logger.severe("Cant save files: " + e.getMessage());
         }

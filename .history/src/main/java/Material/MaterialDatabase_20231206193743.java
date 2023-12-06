@@ -22,7 +22,6 @@ public class MaterialDatabase extends MaterialComposite {
             oos.close();
             return baos.toByteArray();
         } catch (Exception e) {
-            System.out.println("whoops");
             return null;
         }
     }

@@ -96,7 +96,6 @@ public class Inventory {
                                 wW.write("Invalid Quantity value.\n");
                                 continue;
                             }
-                            findmat.get().quantity = 0;
                             findmat.get().quantity += Double.valueOf(result.get("Quantity"));
                             Server.Server.currentlystored.addMaterial(findmat.get().clone());
                             Server.Server.SaveAll();
@@ -162,7 +161,7 @@ public class Inventory {
                                 .withTitle("Does this item have a lifespan?")
                                 .withChoice("Y", "Yes")
                                 .withChoice("N", "No")
-                                .makeASelection(wW, wR).equals("Y");
+                                .makeASelection(wW, wR).equals("Yes");
 
                         if (hasLifespan) {
                             boolean specifyStart = new Menu()

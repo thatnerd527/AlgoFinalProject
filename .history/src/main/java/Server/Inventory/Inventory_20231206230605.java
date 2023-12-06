@@ -96,7 +96,6 @@ public class Inventory {
                                 wW.write("Invalid Quantity value.\n");
                                 continue;
                             }
-                            findmat.get().quantity = 0;
                             findmat.get().quantity += Double.valueOf(result.get("Quantity"));
                             Server.Server.currentlystored.addMaterial(findmat.get().clone());
                             Server.Server.SaveAll();

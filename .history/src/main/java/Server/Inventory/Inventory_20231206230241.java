@@ -49,8 +49,7 @@ public class Inventory {
                                 x.lifespanStart.toString(),
                                 x.lifespanStart.plusSeconds(x.lifespanInSeconds).toString());
                     });
-                    System.out.println(Table.getPrintedTable(table, true));
-
+                    System.out.println(table.getPrintedTable());
                     continue;
                 case "2":
                     Table table2 = new Table();
@@ -62,7 +61,7 @@ public class Inventory {
                             "Quantity",
                             "Life span start",
                             "Life span end");
-                    Server.Server.templatematerials.materialsSub().forEach(x -> {
+                    Server.Server.currentlystored.materialsSub().forEach(x -> {
                         table2.addRow(
                                 x.MaterialID().toString(),
                                 x.name,
@@ -73,7 +72,6 @@ public class Inventory {
                                 x.lifespanStart.toString(),
                                 x.lifespanStart.plusSeconds(x.lifespanInSeconds).toString());
                     });
-                    System.out.println(Table.getPrintedTable(table2, true));
                     continue;
                 case "3":
                     while (true) {
@@ -96,7 +94,6 @@ public class Inventory {
                                 wW.write("Invalid Quantity value.\n");
                                 continue;
                             }
-                            findmat.get().quantity = 0;
                             findmat.get().quantity += Double.valueOf(result.get("Quantity"));
                             Server.Server.currentlystored.addMaterial(findmat.get().clone());
                             Server.Server.SaveAll();
@@ -162,7 +159,7 @@ public class Inventory {
                                 .withTitle("Does this item have a lifespan?")
                                 .withChoice("Y", "Yes")
                                 .withChoice("N", "No")
-                                .makeASelection(wW, wR).equals("Y");
+                                .makeASelection(wW, wR).equals("Yes");
 
                         if (hasLifespan) {
                             boolean specifyStart = new Menu()

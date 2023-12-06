@@ -20,10 +20,9 @@ public class Inventory {
         while (true) {
             String action = new Menu().withTitle("Inventory management")
                     .withChoice("1", "Show currently in stock items.")
-                    .withChoice("2", "Show all template materials.")
-                    .withChoice("3", "Add new item from template ID")
-                    .withChoice("4", "Add new item type to templates")
-                    .withChoice("5", "Add custom item")
+                    .withChoice("2", "Add new item from template ID")
+                    .withChoice("3", "Add new item type to templates")
+                    .withChoice("4", "Add custom item")
                     .withChoice("b", "Back")
                     .makeASelection(wW, wR);
 
@@ -49,33 +48,8 @@ public class Inventory {
                                 x.lifespanStart.toString(),
                                 x.lifespanStart.plusSeconds(x.lifespanInSeconds).toString());
                     });
-                    System.out.println(Table.getPrintedTable(table, true));
-
                     continue;
                 case "2":
-                    Table table2 = new Table();
-                    table2.addColumnNames(
-                            "Material ID", "Name",
-                            "Description",
-                            "Search tags",
-                            "Value per Quantity",
-                            "Quantity",
-                            "Life span start",
-                            "Life span end");
-                    Server.Server.templatematerials.materialsSub().forEach(x -> {
-                        table2.addRow(
-                                x.MaterialID().toString(),
-                                x.name,
-                                x.description,
-                                x.tags.toString(),
-                                ((Double) x.valuePerQty).toString(),
-                                ((Double) x.quantity).toString(),
-                                x.lifespanStart.toString(),
-                                x.lifespanStart.plusSeconds(x.lifespanInSeconds).toString());
-                    });
-                    System.out.println(Table.getPrintedTable(table2, true));
-                    continue;
-                case "3":
                     while (true) {
                         HashMap<String, String> result = new InputForm(wR, wW)
                                 .withField("Template ID", true)
@@ -96,16 +70,14 @@ public class Inventory {
                                 wW.write("Invalid Quantity value.\n");
                                 continue;
                             }
-                            findmat.get().quantity = 0;
                             findmat.get().quantity += Double.valueOf(result.get("Quantity"));
                             Server.Server.currentlystored.addMaterial(findmat.get().clone());
-                            Server.Server.SaveAll();
                             wW.write("Added material.\n");
                             break;
                         }
                     }
                     continue;
-                case "4":
+                case "3":
                     while (true) {
                         HashMap<String, String> result = new InputForm(wR, wW)
                                 .withField("Name", true)
@@ -162,7 +134,7 @@ public class Inventory {
                                 .withTitle("Does this item have a lifespan?")
                                 .withChoice("Y", "Yes")
                                 .withChoice("N", "No")
-                                .makeASelection(wW, wR).equals("Y");
+                                .makeASelection(wW, wR).equals("Yes");
 
                         if (hasLifespan) {
                             boolean specifyStart = new Menu()
@@ -228,13 +200,11 @@ public class Inventory {
                             }
 
                         }
-                        Server.Server.templatematerials.addMaterial(builder.build());
-                        Server.Server.SaveAll();
 
                         break;
                     }
                     continue;
-                case "5":
+                case "4":
 
                     continue;
 

@@ -35,18 +35,10 @@ class Main {
           out.flush();
 
           String strread = "";
-          boolean tryagain = false;
           while (!strread.startsWith("\0")) {
             strread = rdr.readLine();
-            if (strread.length() == 0) {
-              if (!tryagain) {
-                tryagain = true;
-                continue;
-              }
-            }
-            tryagain = false;
             out.write(strread);
-            out.newLine();
+            //out.newLine();
             out.flush();
           }
 

@@ -67,14 +67,8 @@ public class Server {
             try {
                 currentlystored = new MaterialDatabase();
                 templatematerials = new MaterialDatabase();
-                FileWriter cur = new FileWriter("./current.bin");
-                FileWriter template = new FileWriter("./template.bin");
-                saveToWriter(cur, currentlystored.save());
-                saveToWriter(template, templatematerials.save());
-                cur.flush();
-                template.flush();
-                cur.close();
-                template.close();
+                saveToWriter(new FileWriter("./current.bin"), currentlystored.save());
+                saveToWriter(new FileWriter("./template.bin"), templatematerials.save());
                 StartServer();
             } catch (IOException e2) {
                 logger.severe("Cant save initial files, exiting immedeatly");
@@ -91,11 +85,6 @@ public class Server {
 
             saveToWriter(cur, currentlystored.save());
             saveToWriter(template, templatematerials.save());
-
-            cur.flush();
-            cur.close();
-            template.flush();
-            template.close();
         } catch (Exception e) {
             logger.severe("Cant save files: " + e.getMessage());
         }
