@@ -20,6 +20,14 @@
                 {
                     "date": 1701873362013,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -137,9 +137,9 @@\n                             HashMap<String, String> dateinput = new InputForm(wW,wR)\r\n                             .withField(\"Date\",true)\r\n                             .withField(\"Month\",true)\r\n                             .withField(\"Year\",true)\r\n-                                    .receiveInput();\r\n+                            .receiveInput();\r\n \r\n \r\n \r\n \r\n"
+                },
+                {
+                    "date": 1701873888582,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -146,9 +146,9 @@\n                                     .withField(\"Month\", true)\n                                     .withField(\"Year\", true)\n                                     .receiveInput();\n                             String stringDate = \"27/06/2007\";\n-                            String pattern = \"dd/MM/yyyy\";\n+                            String pattern = \"dd/MM/yyyy\";k\n                             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);\n                             LocalDate date = LocalDate.parse(stringDate, dateFormatter);\n \n                         }\n"
+                },
+                {
+                    "date": 1701873898908,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -132,9 +132,9 @@\n                                     .withField(\"Month\", true)\n                                     .withField(\"Year\", true)\n                                     .receiveInput();\n                             String stringDate = \"27/06/2007\";\n-                            String pattern = \"dd/MM/yyyy\";k\n+                            String pattern = \"dd/MM/yyyy\";\n                             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);\n                             LocalDate date = LocalDate.parse(stringDate, dateFormatter);\n \n                         }\n"
                 }
             ],
             "date": 1701872647594,
