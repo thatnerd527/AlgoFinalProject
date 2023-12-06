@@ -1,8 +1,15 @@
 package Server.Inventory;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Optional;
+
+import javax.swing.text.DateFormatter;
 
 import Material.Material;
 import Material.MaterialBuilder;
@@ -85,7 +92,7 @@ public class Inventory {
                                 .withField("Custom value (optional)", false)
                                 .withTitle("Add item to stock by ID: Basic Data")
                                 .receiveInput();
-                        //#region Input validation
+                        // #region Input validation
                         try {
                             if (Double.valueOf(result.get("Value per Qty")) <= 0) {
                                 throw new Exception();
@@ -115,7 +122,7 @@ public class Inventory {
                             wW.write("Custom value has to be a valid positive number.");
                             continue;
                         }
-                        //#endregion
+                        // #endregion
 
                         MaterialBuilder builder = new MaterialBuilder()
                                 .withName(result.get("Name"))
@@ -128,25 +135,23 @@ public class Inventory {
                         }
 
                         boolean hasLifespan = new Menu()
-                        .withTitle("Does this item have a lifespan?")
-                        .withChoice("Y","Yes")
-                        .withChoice("N","No")
-                        .makeASelection(wW,wR).equals("Yes");
+                                .withTitle("Does this item have a lifespan?")
+                                .withChoice("Y", "Yes")
+                                .withChoice("N", "No")
+                                .makeASelection(wW, wR).equals("Yes");
 
                         if (hasLifespan) {
-                            HashMap<String, String> dateinput = new InputForm(wW,wR)
-                            .withField("Date",true)
-                            .withField("Month",true)
-                            .withField("Year",true)
+                            HashMap<String, String> dateinput = new InputForm(wW, wR)
+                                    .withField("Date", true)
+                                    .withField("Month", true)
+                                    .withField("Year", true)
                                     .receiveInput();
-
-                            Date.parse("");
-
-
-
+                            String stringDate = "27/06/2007";
+                            String pattern = "dd/MM/yyyy";
+                            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+                            LocalDate date = LocalDate.parse(stringDate, dateFormatter);
 
                         }
-
 
                         break;
 
