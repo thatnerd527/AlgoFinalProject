@@ -99,7 +99,7 @@ public class InputForm {
             wW.write(buildResult());
             String choice = new Menu()
                     .withTitle("Input confirmation")
-                    .withChoice("C", "Confim input")
+                    .withChoice("C", "Confirm input")
                     .withChoice("R", "Retry input")
                     .makeASelection(wW, wR);
             if (choice.equals("C")) {

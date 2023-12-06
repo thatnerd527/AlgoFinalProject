@@ -1,6 +1,6 @@
 package Server.Inventory;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -77,23 +77,78 @@ public class Inventory {
                 case "3":
                     while (true) {
                         HashMap<String, String> result = new InputForm(wR, wW)
-                                .withField("Name",true)
+                                .withField("Name", true)
                                 .withField("Description", true)
                                 .withField("Differentiator (optional)", false)
                                 .withField("Value per Qty", true)
                                 .withField("Quantity (above 0)", true)
                                 .withField("Custom value (optional)", false)
-                                .withTitle("Add item to stock by ID")
+                                .withTitle("Add item to stock by ID: Basic Data")
                                 .receiveInput();
+                        //#region Input validation
+                        try {
+                            if (Double.valueOf(result.get("Value per Qty")) <= 0) {
+                                throw new Exception();
+                            }
+
+                        } catch (Exception e) {
+                            wW.write("Value per Qty has to be a valid positive number.");
+                            continue;
+                        }
+                        try {
+                            if (Double.valueOf(result.get("Quantity (above 0)")) <= 0) {
+                                throw new Exception();
+                            }
+
+                        } catch (Exception e) {
+                            wW.write("Quantity has to be a valid positive number.");
+                            continue;
+                        }
+                        try {
+                            if (result.get("Custom value (optional)").length() > 0) {
+                                if (Double.valueOf(result.get("Custom value (optional)")) <= 0) {
+                                    throw new Exception();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                            wW.write("Custom value has to be a valid positive number.");
+                            continue;
+                        }
+                        //#endregion
+
                         MaterialBuilder builder = new MaterialBuilder()
-                        .withName("")
-                        .withDescription("")
-                        .withDifferentiator("")
-                        .withValuePerQty(1)
-                        .withQuantity(11)
-                        .withLifespanStart(Instant.now())
-                                .withLifespanSeconds(23132);
-                                break;
+                                .withName(result.get("Name"))
+                                .withDescription(result.get("Description"))
+                                .withDifferentiator(result.get("Differentiator (optional)"))
+                                .withValuePerQty(Double.valueOf(result.get("Value per Qty")))
+                                .withQuantity(Double.valueOf(result.get("Quantity (above 0)")));
+                        if (result.get("Custom value (optional)").length() > 0) {
+                            builder = builder.withOverrideValue(Double.valueOf(result.get("Custom value (optional)")));
+                        }
+
+                        boolean hasLifespan = new Menu()
+                        .withTitle("Does this item have a lifespan?")
+                        .withChoice("Y","Yes")
+                        .withChoice("N","No")
+                        .makeASelection(wW,wR).equals("Yes");
+
+                        if (hasLifespan) {
+                            HashMap<String, String> dateinput = new InputForm(wW,wR)
+                            .withField("Date",true)
+                            .withField("Month",true)
+                            .withField("Year",true)
+                                    .receiveInput();
+
+                            Date.parse("");
+
+
+
+
+                        }
+
+
+                        break;
 
                     }
                     continue;
