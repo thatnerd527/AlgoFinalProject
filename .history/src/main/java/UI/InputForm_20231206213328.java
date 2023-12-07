@@ -21,6 +21,7 @@ public class InputForm {
     public InputForm(WrappedReader wR, WrappedWriter wW) {
         this.wR = wR;
         this.wW = wW;
+
     }
 
     public InputForm(WrappedWriter wW, WrappedReader wR) {

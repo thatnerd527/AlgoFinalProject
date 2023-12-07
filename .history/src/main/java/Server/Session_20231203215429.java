@@ -6,7 +6,6 @@ import java.io.Writer;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import Server.Calculator.Calculator;
 import Server.Inventory.Inventory;
 import UI.Menu;
 
@@ -62,7 +61,7 @@ public class Session {
                     break;
 
                 case "2":
-                    Calculator.HandleCalculator(wR,wW);
+
                     break;
                 case "3":
                     wR.close();

@@ -459,7 +459,7 @@ public class Inventory {
                         Server.Server.currentlystored.removeMaterial(findmat.get());
 
                         continue;
-                case "7":
+                    case "b":
                     break;
 
                 case "b":

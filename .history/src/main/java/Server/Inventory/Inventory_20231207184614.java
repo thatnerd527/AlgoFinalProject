@@ -458,9 +458,7 @@ public class Inventory {
                         findmat.get().quantity = Double.valueOf(result.get("Quantity"));
                         Server.Server.currentlystored.removeMaterial(findmat.get());
 
-                        continue;
-                case "7":
-                    break;
+                    continue;
 
                 case "b":
                     break;
