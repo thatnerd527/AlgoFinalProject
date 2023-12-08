@@ -1,9 +1,5 @@
 package Server.Calculator;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -93,7 +89,7 @@ class InternalCalculator {
                 case "1.1":
                     TablePrinter(new MaterialComposite(new ArrayList<Material>(Server.currentlystored.materials()
                             .stream().filter(x -> x.isExpired()).collect(Collectors.toList()))), wW);
-                    continue;
+                    break;
                 case "1.2":
                     TablePrinter(purchased, wW);
                     Sandbox sandbox4 = new Sandbox(0);
@@ -101,7 +97,7 @@ class InternalCalculator {
                         sandbox4.setCurrentValue(sandbox4.getCurrentValue() + x.getValue());
                     });
                     wW.write("Total value of purchased items: " + sandbox4.getCurrentValue() + "\n");
-                    continue;
+                    break;
                 case "1.3":
                     TablePrinter(sold, wW);
                     Sandbox sandbox3 = new Sandbox(0);
@@ -109,7 +105,7 @@ class InternalCalculator {
                         sandbox3.setCurrentValue(sandbox3.getCurrentValue() + x.getValue());
                     });
                     wW.write("Total value of sold items: " + sandbox3.getCurrentValue() + "\n");
-                    continue;
+                    break;
                 case "1.4":
                     TablePrinter(stolen, wW);
                     Sandbox sandbox2 = new Sandbox(0);
@@ -117,7 +113,7 @@ class InternalCalculator {
                         sandbox2.setCurrentValue(sandbox2.getCurrentValue() + x.getValue());
                     });
                     wW.write("Total value of stolen items: " + sandbox2.getCurrentValue() + "\n");
-                    continue;
+                    break;
                 case "1.5":
                     TablePrinter(built, wW);
                     Sandbox sandbox = new Sandbox(0);
@@ -151,7 +147,7 @@ class InternalCalculator {
                     });
                     wW.write("Total value of built items: " + sandbox.getCurrentValue() + "\n");
 
-                    continue;
+                    break;
 
                 case "2.1":
                     MaterialComposite toremove = new MaterialComposite(
@@ -159,83 +155,11 @@ class InternalCalculator {
                                     .stream().filter(x -> x.isExpired()).collect(Collectors.toList())));
                     TablePrinter(toremove, wW);
                     String choice = new Menu()
-                            .withTitle("Are you sure you want to remove all expired items?")
-                            .withChoice("Y", "Yes")
-                            .withChoice("N", "No")
-                            .makeASelection(wW, wR);
-                    if (choice.equals("Y")) {
-                        toremove.materials().stream().forEach(x -> {
-                            Server.currentlystored.removeMaterial(x);
-                        });
-                        wW.write("All expired items have been removed.\n");
-                        continue;
-                    }
-                    wW.write("Expired items have not been removed.\n");
-                    continue;
+                        .withTitle("")
+                    break;
                 case "2.2":
-                    while (true) {
-                        HashMap<String, String> result = new InputForm(wR, wW)
-                                .withField("Template ID", true)
-                                .withField("Quantity", true)
-                                .withTitle("Add purchased item to record by ID")
-                                .receiveInput();
-                        Optional<Material> findmat = Server.templatematerials.materialsSub().stream()
-                                .filter((Material mat) -> {
-                                    return result.get("Template ID").equals(mat.MaterialID().toString());
-                                }).findFirst();
-                        if (!findmat.isPresent()) {
-                            wW.write("That Template ID is not present in the database.\n");
-                            break;
-                        } else {
-                            try {
-                                Double.valueOf(result.get("Quantity"));
-                            } catch (Exception e) {
-                                wW.write("Invalid Quantity value.\n");
-                                continue;
-                            }
-                            findmat.get().quantity = 0;
-                            findmat.get().quantity += Double.valueOf(result.get("Quantity"));
-                            Instant startLifespan = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant();
-                            if (findmat.get().lifespanInSeconds > 0) {
-                                boolean specifyStart = new Menu()
-                                        .withTitle("Change the item's start lifespan?")
-                                        .withChoice("Y", "Yes")
-                                        .withChoice("N", "No (uses now)")
-                                        .makeASelection(wW, wR).equals("Y");
-                                if (specifyStart) {
-                                    while (true) {
-                                        try {
-                                            HashMap<String, String> dateinput = new InputForm(wW, wR)
-                                                    .withField("Date (2 digits)", true)
-                                                    .withField("Month (2 digits)", true)
-                                                    .withField("Year (4 digits)", true)
-                                                    .withTitle("Specify the item's start lifespan")
-                                                    .receiveInput();
-                                            String stringDate = dateinput.get("Date (2 digits)") + "/"
-                                                    + dateinput.get("Month (2 digits)") + "/"
-                                                    + dateinput.get("Year (4 digits)");
-                                            String pattern = "dd/MM/yyyy";
-                                            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-                                            startLifespan = LocalDate.parse(stringDate, dateFormatter)
-                                                    .atStartOfDay(ZoneId.systemDefault()).toInstant();
 
-                                        } catch (Exception e) {
-                                            wW.write("Invalid date format.\n");
-                                            continue;
-                                        }
-                                    }
-                                }
-                                findmat.get().setLifespanStart(startLifespan);
-
-                            }
-
-                            purchased.addMaterial(findmat.get().clone());
-                            wW.write("Added material.\n");
-                            break;
-                        }
-
-                    }
-                    continue;
+                    break;
                 case "2.3":
 
                     break;
@@ -243,9 +167,6 @@ class InternalCalculator {
 
                     break;
                 case "2.5":
-
-                    break;
-                case "3":
 
                     break;
 

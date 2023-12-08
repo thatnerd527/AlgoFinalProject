@@ -51,14 +51,13 @@ public class Inventory {
                                 x.description,
                                 x.tags.toString(),
                                 x.differentiator,
-                                ((Double) x
-                                        .getValuePerQty()).toString(),
+                                ((Double) x.valuePerQty).toString(),
                                 ((Double) x.quantity).toString(),
                                 x.getLifespanStart().toString(),
                                 x.getLifespanStart().plusSeconds(x.lifespanInSeconds).toString(),
                                 x.isExpired().toString());
                     });
-                    wW.write(Table.getPrintedTable(table, true) + "\n");
+                    System.out.println(Table.getPrintedTable(table, true));
 
                     continue;
                 case "2":
@@ -77,12 +76,11 @@ public class Inventory {
                                 x.description,
                                 x.tags.toString(),
                                 x.differentiator,
-                                ((Double) x
-                                        .getValuePerQty()).toString(),
+                                ((Double) x.valuePerQty).toString(),
                                 ((Double) (((Double) Double.valueOf(x.lifespanInSeconds)) / ((Double) 86400d)))
                                         .toString() + " days");
                     });
-                    wW.write(Table.getPrintedTable(table2, true) + "\n");
+                    System.out.println(Table.getPrintedTable(table2, true));
                     continue;
                 case "3":
                     while (true) {
@@ -464,8 +462,6 @@ public class Inventory {
 
                         continue;
                 case "7":
-                    break;
-                case "8":
                     break;
 
                 case "b":

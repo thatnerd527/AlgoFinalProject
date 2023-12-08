@@ -38,22 +38,12 @@ public class Material implements Serializable {
             for (Material m : getComposite().getMaterials()) {
                 BoM += m.getValue();
             }
-            return BoM * quantity;
-        } else {
-            return getValuePerQty() * quantity;
+            return BoM;
         }
     }
 
     public double getValuePerQty() {
-        if (valuePerQty == 0) {
-            double BoM = 0;
-            for (Material m : getComposite().getMaterials()) {
-                BoM += m.getValuePerQty();
-            }
-            return BoM;
-        } else {
-            return valuePerQty;
-        }
+        return valuePerQty;
     }
 
     public void setValuePerQty(double valuePerQty) {

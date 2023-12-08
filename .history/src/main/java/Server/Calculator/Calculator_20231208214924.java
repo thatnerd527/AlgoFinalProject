@@ -177,7 +177,7 @@ class InternalCalculator {
                         HashMap<String, String> result = new InputForm(wR, wW)
                                 .withField("Template ID", true)
                                 .withField("Quantity", true)
-                                .withTitle("Add purchased item to record by ID")
+                                .withTitle("Add item to calculator by ID")
                                 .receiveInput();
                         Optional<Material> findmat = Server.templatematerials.materialsSub().stream()
                                 .filter((Material mat) -> {

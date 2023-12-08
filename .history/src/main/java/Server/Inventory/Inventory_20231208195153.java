@@ -465,8 +465,6 @@ public class Inventory {
                         continue;
                 case "7":
                     break;
-                case "8":
-                    break;
 
                 case "b":
                     break;

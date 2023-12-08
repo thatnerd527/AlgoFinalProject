@@ -1,9 +1,5 @@
 package Server.Calculator;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -173,13 +169,13 @@ class InternalCalculator {
                     wW.write("Expired items have not been removed.\n");
                     continue;
                 case "2.2":
-                    while (true) {
+                                        while (true) {
                         HashMap<String, String> result = new InputForm(wR, wW)
                                 .withField("Template ID", true)
                                 .withField("Quantity", true)
-                                .withTitle("Add purchased item to record by ID")
+                                .withTitle("Add item to stock by ID")
                                 .receiveInput();
-                        Optional<Material> findmat = Server.templatematerials.materialsSub().stream()
+                        Optional<Material> findmat = Server.Server.templatematerials.materialsSub().stream()
                                 .filter((Material mat) -> {
                                     return result.get("Template ID").equals(mat.MaterialID().toString());
                                 }).findFirst();
@@ -229,13 +225,13 @@ class InternalCalculator {
 
                             }
 
-                            purchased.addMaterial(findmat.get().clone());
+                            Server.Server.currentlystored.addMaterial(findmat.get().clone());
+                            Server.Server.SaveAll();
                             wW.write("Added material.\n");
                             break;
                         }
-
                     }
-                    continue;
+                    break;
                 case "2.3":
 
                     break;
@@ -243,9 +239,6 @@ class InternalCalculator {
 
                     break;
                 case "2.5":
-
-                    break;
-                case "3":
 
                     break;
 

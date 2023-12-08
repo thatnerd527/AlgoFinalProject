@@ -177,7 +177,7 @@ class InternalCalculator {
                         HashMap<String, String> result = new InputForm(wR, wW)
                                 .withField("Template ID", true)
                                 .withField("Quantity", true)
-                                .withTitle("Add purchased item to record by ID")
+                                .withTitle("Add item to calculator by ID")
                                 .receiveInput();
                         Optional<Material> findmat = Server.templatematerials.materialsSub().stream()
                                 .filter((Material mat) -> {
@@ -229,13 +229,14 @@ class InternalCalculator {
 
                             }
 
-                            purchased.addMaterial(findmat.get().clone());
+                            Server.currentlystored.addMaterial(findmat.get().clone());
+                            Server.SaveAll();
                             wW.write("Added material.\n");
                             break;
                         }
-
+                        
                     }
-                    continue;
+                    break;
                 case "2.3":
 
                     break;
@@ -243,9 +244,6 @@ class InternalCalculator {
 
                     break;
                 case "2.5":
-
-                    break;
-                case "3":
 
                     break;
 

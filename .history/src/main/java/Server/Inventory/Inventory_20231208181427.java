@@ -51,8 +51,7 @@ public class Inventory {
                                 x.description,
                                 x.tags.toString(),
                                 x.differentiator,
-                                ((Double) x
-                                        .getValuePerQty()).toString(),
+                                ((Double) x.valuePerQty).toString(),
                                 ((Double) x.quantity).toString(),
                                 x.getLifespanStart().toString(),
                                 x.getLifespanStart().plusSeconds(x.lifespanInSeconds).toString(),
@@ -77,8 +76,7 @@ public class Inventory {
                                 x.description,
                                 x.tags.toString(),
                                 x.differentiator,
-                                ((Double) x
-                                        .getValuePerQty()).toString(),
+                                ((Double) x.valuePerQty).toString(),
                                 ((Double) (((Double) Double.valueOf(x.lifespanInSeconds)) / ((Double) 86400d)))
                                         .toString() + " days");
                     });
@@ -464,8 +462,6 @@ public class Inventory {
 
                         continue;
                 case "7":
-                    break;
-                case "8":
                     break;
 
                 case "b":

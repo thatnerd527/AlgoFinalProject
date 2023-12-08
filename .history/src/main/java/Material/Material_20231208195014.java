@@ -27,36 +27,13 @@ public class Material implements Serializable {
 
     public ArrayList<String> tags;
 
-    private double valuePerQty;
+    public double valuePerQty;
 
-    public double getValue() {
-        if (overrideValue > 0) {
-            return overrideValue;
-        }
-        if (valuePerQty == 0) {
-            double BoM = 0;
-            for (Material m : getComposite().getMaterials()) {
-                BoM += m.getValue();
-            }
-            return BoM * quantity;
-        } else {
-            return getValuePerQty() * quantity;
-        }
+    private double getValuePerQty() {
+        return valuePerQty;
     }
 
-    public double getValuePerQty() {
-        if (valuePerQty == 0) {
-            double BoM = 0;
-            for (Material m : getComposite().getMaterials()) {
-                BoM += m.getValuePerQty();
-            }
-            return BoM;
-        } else {
-            return valuePerQty;
-        }
-    }
-
-    public void setValuePerQty(double valuePerQty) {
+    private void setValuePerQty(double valuePerQty) {
         this.valuePerQty = valuePerQty;
     }
 
@@ -146,7 +123,7 @@ public class Material implements Serializable {
 
      public Integer MaterialIDWithoutCustomValue() {
         return (Double.toString(lifespanInSeconds) +
-                Double.toString(this.getValuePerQty()) +
+                Double.toString(valuePerQty) +
                 differentiator +
                 getLifespanStart().toString().hashCode() +
                 getComposite().cumulativeID()).hashCode();
@@ -154,7 +131,7 @@ public class Material implements Serializable {
 
     public Integer MaterialIDWithQuantity() {
         return (Double.toString(lifespanInSeconds) +
-                Double.toString(this.getValuePerQty()) +
+                Double.toString(valuePerQty) +
                 Double.toString(overrideValue) +
                 differentiator +
                 quantity +
@@ -168,7 +145,7 @@ public class Material implements Serializable {
             clonedTags.add(String.valueOf(tag));
         }
         return new Material(String.valueOf(name), String.valueOf(description), String.valueOf(differentiator), tags,
-                this.getValuePerQty(), overrideValue, quantity, getLifespanStart(), lifespanInSeconds,
+                valuePerQty, overrideValue, quantity, getLifespanStart(), lifespanInSeconds,
                 getComposite());
     }
 
