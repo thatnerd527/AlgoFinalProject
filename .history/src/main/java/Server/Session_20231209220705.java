@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 
 import Server.Calculator.Calculator;
 import Server.Inventory.Inventory;
-import Server.MaterialCalculator.MaterialC;
 import UI.Menu;
 
 public class Session {
@@ -66,7 +65,7 @@ public class Session {
                     Calculator.HandleCalculator(wR,wW);
                     break;
                 case "3":
-                    MaterialC.HandleMaterialCalculatorUI(wR,wW);
+                    MaterialC
                     break;
                 case "4":
                     wR.close();

@@ -40,9 +40,7 @@ public class CalculatorFunctions {
     }
 
     // only gets missing, if it exists and there is enough it is not included.
-    // have all = not included
-    // not have at all = included in full
-    // not enough = includes the amount that is required to satisfy
+    //
     public static MaterialComposite getMaterialsForBuildShallow(Material x, MaterialComposite current) {
         MaterialComposite result = new MaterialComposite();
         if (x.getComposite().materials().size() == 0) {
