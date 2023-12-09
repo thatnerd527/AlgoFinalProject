@@ -8,28 +8,21 @@
       <string>name</string>
       <void method="set">
        <object idref="Material0"/>
-       <string>okoo</string>
+       <string>okokok</string>
       </void>
      </void>
      <void class="Material.Material" method="getField">
       <string>description</string>
       <void method="set">
        <object idref="Material0"/>
-       <string>ljdklsjkljadkls</string>
-      </void>
-     </void>
-     <void class="Material.Material" method="getField">
-      <string>valuePerQty</string>
-      <void method="set">
-       <object idref="Material0"/>
-       <double>1.0</double>
+       <string>dkaodsdokd</string>
       </void>
      </void>
      <void class="Material.Material" method="getField">
       <string>quantity</string>
       <void method="set">
        <object idref="Material0"/>
-       <double>500.0</double>
+       <double>1000.0</double>
       </void>
      </void>
      <void class="Material.Material" method="getField">
@@ -43,12 +36,61 @@
       <string>lifespanStartUnixMilli</string>
       <void method="set">
        <object idref="Material0"/>
-       <long>1701882000000</long>
+       <long>1702054800000</long>
       </void>
      </void>
      <void id="MaterialComposite0" property="composite"/>
      <void property="composite">
       <object idref="MaterialComposite0"/>
+     </void>
+     <void property="valuePerQty">
+      <double>1000.0</double>
+     </void>
+    </object>
+   </void>
+   <void method="add">
+    <object class="Material.Material" id="Material1">
+     <void class="Material.Material" method="getField">
+      <string>name</string>
+      <void method="set">
+       <object idref="Material1"/>
+       <string>okokok</string>
+      </void>
+     </void>
+     <void class="Material.Material" method="getField">
+      <string>description</string>
+      <void method="set">
+       <object idref="Material1"/>
+       <string>dkaodsdokd</string>
+      </void>
+     </void>
+     <void class="Material.Material" method="getField">
+      <string>quantity</string>
+      <void method="set">
+       <object idref="Material1"/>
+       <double>900000.0</double>
+      </void>
+     </void>
+     <void class="Material.Material" method="getField">
+      <string>lifespanInSeconds</string>
+      <void method="set">
+       <object idref="Material1"/>
+       <long>86400</long>
+      </void>
+     </void>
+     <void class="Material.Material" method="getField">
+      <string>lifespanStartUnixMilli</string>
+      <void method="set">
+       <object idref="Material1"/>
+       <long>1702054800000</long>
+      </void>
+     </void>
+     <void id="MaterialComposite1" property="composite"/>
+     <void property="composite">
+      <object idref="MaterialComposite1"/>
+     </void>
+     <void property="valuePerQty">
+      <double>1000.0</double>
      </void>
     </object>
    </void>

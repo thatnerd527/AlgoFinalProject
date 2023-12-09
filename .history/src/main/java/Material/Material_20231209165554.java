@@ -1,0 +1,238 @@
+package Material;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.stream.Stream;
+
+public class Material implements Serializable {
+    public String name;
+
+    public String description;
+
+    public String differentiator;
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
+    }
+
+    public ArrayList<String> tags;
+
+    private double valuePerQty;
+
+    public double getValue() {
+        if (overrideValue > 0) {
+            return overrideValue;
+        }
+        if (valuePerQty == 0) {
+            double BoM = 0;
+            for (Material m : getComposite().getMaterials()) {
+                BoM += m.getValue();
+            }
+            return BoM * quantity;
+        } else {
+            return getValuePerQty() * quantity;
+        }
+    }
+
+    public double getValuePerQty() {
+        if (valuePerQty == 0) {
+            double BoM = 0;
+            for (Material m : getComposite().getMaterials()) {
+                BoM += m.getValuePerQty();
+            }
+            return BoM;
+        } else {
+            return valuePerQty;
+        }
+    }
+
+    public void setValuePerQty(double valuePerQty) {
+        this.valuePerQty = valuePerQty;
+    }
+
+    public double overrideValue;
+
+    public double quantity;
+
+    public long lifespanInSeconds;
+
+    public MaterialComposite getComposite() {
+        try {
+            return MaterialComposite.load(composite);
+        } catch (ClassNotFoundException | IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void setComposite(MaterialComposite composite) {
+        this.composite = composite.save();
+    }
+
+    public Instant getLifespanStart() {
+        return Instant.ofEpochMilli(lifespanStartUnixMilli);
+    }
+
+    public void setLifespanStart(Instant lifespanStart) {
+        this.lifespanStartUnixMilli = lifespanStart.toEpochMilli();
+
+    }
+
+    private byte[] composite;
+
+    public long lifespanStartUnixMilli;
+
+    public Material(String name, String description, String differentiator, ArrayList<String> tags, double valuePerQty,
+            double overrideValue, double quantity, Instant lifespanStart, long lifespan, MaterialComposite composite) {
+        this.name = name;
+        this.description = description;
+        this.differentiator = differentiator;
+        this.tags = tags;
+        this.setValuePerQty(valuePerQty);
+        this.overrideValue = overrideValue;
+        this.quantity = quantity;
+        this.setLifespanStart(lifespanStart);
+        this.lifespanInSeconds = lifespan;
+        this.setComposite(composite);
+    }
+
+    public Material() {
+        this.setLifespanStart(Instant.now());
+        setComposite(new MaterialComposite());
+        this.tags = new ArrayList<String>();
+        this.differentiator = "";
+        this.name = "";
+        this.description = "";
+        this.setValuePerQty(0);
+        this.overrideValue = 0;
+        this.quantity = 0;
+        this.lifespanInSeconds = 0;
+    }
+
+    public Material(String name, String description, String differentiator, ArrayList<String> tags, double valuePerQty,
+            double overrideValue, double quantity, Instant lifespanStart, long lifespan,
+            ArrayList<Material> composite) {
+        this.name = name;
+        this.description = description;
+        this.differentiator = differentiator;
+        this.tags = tags;
+        this.setValuePerQty(valuePerQty);
+        this.overrideValue = overrideValue;
+        this.quantity = quantity;
+        this.setLifespanStart(lifespanStart);
+        this.lifespanInSeconds = lifespan;
+        this.setComposite(new MaterialComposite(composite));
+    }
+
+    public int MaterialID() {
+        return (Double.toString(lifespanInSeconds) +
+                Double.toString(this.getValuePerQty()) +
+                Double.toString(overrideValue) +
+                differentiator +
+                getLifespanStart().toString().hashCode() +
+                getComposite().cumulativeID()).hashCode();
+    }
+
+     public int MaterialIDWithoutCustomValue() {
+        return (Double.toString(lifespanInSeconds) +
+                Double.toString(this.getValuePerQty()) +
+                differentiator +
+                getLifespanStart().toString().hashCode() +
+                getComposite().cumulativeID()).hashCode();
+    }
+
+    public int MaterialIDWithQuantity() {
+        return (Double.toString(lifespanInSeconds) +
+                Double.toString(this.getValuePerQty()) +
+                Double.toString(overrideValue) +
+                differentiator +
+                quantity +
+                getLifespanStart().toString().hashCode() +
+                getComposite().cumulativeID()).hashCode();
+    }
+
+    public Material clone() {
+        ArrayList<String> clonedTags = new ArrayList<String>();
+        for (String tag : tags) {
+            clonedTags.add(String.valueOf(tag));
+        }
+        return new Material(String.valueOf(name), String.valueOf(description), String.valueOf(differentiator), tags,
+                this.getValuePerQty(), overrideValue, quantity, getLifespanStart(), lifespanInSeconds,
+                getComposite());
+    }
+
+    public Material loadfrom(byte[] loadfrom) {
+        try {
+            ObjectInputStream objectInputStream = new ObjectInputStream((InputStream) Stream.of(loadfrom));
+            Material material = (Material) objectInputStream.readObject();
+            return material;
+        } catch (Exception e) {
+            return null;
+
+        }
+    }
+
+    public Boolean isExpired() {
+        Instant now = Instant.now();
+        return (Boolean)now.isAfter(getLifespanStart().plusSeconds(lifespanInSeconds));
+    }
+
+    public byte[] serialize() {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(this);
+            oos.close();
+            return baos.toByteArray();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public ArrayList<Material> getAllSubMaterials(boolean inclusive, boolean clone) {
+        ArrayList<Material> submaterials = new ArrayList<>();
+        if (inclusive) {
+            if (clone) {
+                submaterials.add(clone());
+            } else {
+                submaterials.add(this);
+            }
+        }
+        getComposite().materials().forEach(m -> {
+            if (clone) {
+                submaterials.add(m.clone());
+            } else {
+                submaterials.add(m);
+            }
+            submaterials.addAll(m.getAllSubMaterials(false, clone));
+        });
+        return submaterials;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof Material)) {
+            return false;
+        }
+
+        Material c = (Material) o;
+
+        return c.MaterialID() == MaterialID();
+    }
+
+}
