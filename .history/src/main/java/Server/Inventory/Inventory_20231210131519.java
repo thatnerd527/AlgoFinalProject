@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -19,17 +18,16 @@ import UI.Table;
 
 public class Inventory {
 
-    private static String sortby = "none";
+    private String sortby = "none";
 
-    private static boolean comparator(Material a, Material b) {
+    private boolean comparator(Material a, Material b) {
         switch (sortby) {
             case "materialid":
                 return a.MaterialID() > b.MaterialID();
             case "lifespanstart":
                 return a.lifespanStartUnixMilli > b.lifespanStartUnixMilli;
             case "lifespanend":
-                return a.getLifespanStart().plusSeconds(a.lifespanInSeconds).getEpochSecond() > b.getLifespanStart()
-                        .plusSeconds(b.lifespanInSeconds).getEpochSecond();
+                return a.getLifespanStart().plusSeconds(a.lifespanInSeconds).getEpochSecond() > b.getLifespanStart().plusSeconds(b.lifespanInSeconds).getEpochSecond();
             case "quantity":
                 return a.quantity > b.quantity;
             case "valueperqty":
@@ -41,7 +39,7 @@ public class Inventory {
         }
     }
 
-    private static void sortTable(Material array[]) {
+    private void sortTable(Material array[]) {
         if (sortby.equals("none"))
             return;
         int n = array.length;
@@ -84,13 +82,7 @@ public class Inventory {
                             "Life span start",
                             "Life span end",
                             "Is expired");
-                    Material[] mats = Server.Server.currentlystored.materials().toArray(new Material[0]);
-                    sortTable(mats);
-                    ArrayList<Material> result2 = new ArrayList<>();
-                    for (Material material : mats) {
-                        result2.add(material);
-                    }
-                    result2.forEach(x -> {
+                    Server.Server.currentlystored.materialsSub().forEach(x -> {
                         table.addRow(
                                 Integer.valueOf(x.MaterialID())
                                         .toString(),
@@ -211,24 +203,12 @@ public class Inventory {
                     if (target2 == null) {
                         continue;
                     }
-                    Material newmaterial2 = InventoryFunctions.ModifyMaterialQuantity(wR, wW,
-                            InventoryFunctions.CreateMaterial(wR, wW));
+                    Material newmaterial2 = InventoryFunctions.ModifyMaterialQuantity(wR,wW,InventoryFunctions.CreateMaterial(wR, wW));
                     Server.Server.templatematerials.removeMaterial(target2);
                     Server.Server.templatematerials.addMaterial(newmaterial2);
                     continue;
                 case "9":
-                    String sortby = new Menu()
-                            .withTitle("Sorting settings")
-                            .withChoice("materialid", "Sort by material ID")
-                            .withChoice("lifespanstart", "Sort by start of lifespan")
-                            .withChoice("lifespanend", "Sort by end of lifespan")
-                            .withChoice("quantity", "Sort by quantity")
-                            .withChoice("valueperqty", "Sort by value per quantity")
-                            .withChoice("value", "Sort by value")
-                            .withChoice("none", "No sorting")
-                            .makeASelection(wW, wR);
-                    Inventory.sortby = sortby;
-                    continue;
+
                 case "b":
                     break;
 

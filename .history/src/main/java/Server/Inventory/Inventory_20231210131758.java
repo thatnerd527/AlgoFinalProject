@@ -86,11 +86,11 @@ public class Inventory {
                             "Is expired");
                     Material[] mats = Server.Server.currentlystored.materials().toArray(new Material[0]);
                     sortTable(mats);
-                    ArrayList<Material> result2 = new ArrayList<>();
+                    ArrayList<Material> result = new ArrayList<>();
                     for (Material material : mats) {
-                        result2.add(material);
+                        result.add(material);
                     }
-                    result2.forEach(x -> {
+                    result.forEach(x -> {
                         table.addRow(
                                 Integer.valueOf(x.MaterialID())
                                         .toString(),
@@ -217,18 +217,7 @@ public class Inventory {
                     Server.Server.templatematerials.addMaterial(newmaterial2);
                     continue;
                 case "9":
-                    String sortby = new Menu()
-                            .withTitle("Sorting settings")
-                            .withChoice("materialid", "Sort by material ID")
-                            .withChoice("lifespanstart", "Sort by start of lifespan")
-                            .withChoice("lifespanend", "Sort by end of lifespan")
-                            .withChoice("quantity", "Sort by quantity")
-                            .withChoice("valueperqty", "Sort by value per quantity")
-                            .withChoice("value", "Sort by value")
-                            .withChoice("none", "No sorting")
-                            .makeASelection(wW, wR);
-                    Inventory.sortby = sortby;
-                    continue;
+
                 case "b":
                     break;
 

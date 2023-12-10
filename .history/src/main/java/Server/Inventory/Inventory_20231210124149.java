@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -19,42 +18,17 @@ import UI.Table;
 
 public class Inventory {
 
-    private static String sortby = "none";
-
-    private static boolean comparator(Material a, Material b) {
-        switch (sortby) {
-            case "materialid":
-                return a.MaterialID() > b.MaterialID();
-            case "lifespanstart":
-                return a.lifespanStartUnixMilli > b.lifespanStartUnixMilli;
-            case "lifespanend":
-                return a.getLifespanStart().plusSeconds(a.lifespanInSeconds).getEpochSecond() > b.getLifespanStart()
-                        .plusSeconds(b.lifespanInSeconds).getEpochSecond();
-            case "quantity":
-                return a.quantity > b.quantity;
-            case "valueperqty":
-                return a.getValuePerQty() > b.getValuePerQty();
-            case "value":
-                return a.getValue() > b.getValue();
-            default:
-                return false;
-        }
-    }
-
-    private static void sortTable(Material array[]) {
-        if (sortby.equals("none"))
-            return;
-        int n = array.length;
-        for (int j = 1; j < n; j++) {
-            Material key = array[j];
-            int i = j - 1;
-            while ((i > -1) && comparator(array[i], key)) {
-                array[i + 1] = array[i];
-                i--;
-            }
-            array[i + 1] = key;
-        }
-    }
+        public static void insertionSort(int array[]) {
+        int n = array.length;  
+        for (int j = 1; j < n; j++) {  
+            int key = array[j];  
+            int i = j-1;  
+            while ( (i > -1) && ( array [i] > key ) ) {  
+                array [i+1] = array [i];  
+                i--;  
+            }  
+            array[i+1] = key;  
+        }  
 
     public static void HandleInventory(WrappedReader wR, WrappedWriter wW) {
         while (true) {
@@ -67,7 +41,6 @@ public class Inventory {
                     .withChoice("6", "Remove item")
                     .withChoice("7", "Edit template item")
                     .withChoice("8", "Edit item in stock")
-                    .withChoice("9", "Edit sorting settings")
                     .withChoice("b", "Back")
                     .makeASelection(wW, wR);
 
@@ -84,13 +57,7 @@ public class Inventory {
                             "Life span start",
                             "Life span end",
                             "Is expired");
-                    Material[] mats = Server.Server.currentlystored.materials().toArray(new Material[0]);
-                    sortTable(mats);
-                    ArrayList<Material> result2 = new ArrayList<>();
-                    for (Material material : mats) {
-                        result2.add(material);
-                    }
-                    result2.forEach(x -> {
+                    Server.Server.currentlystored.materialsSub().forEach(x -> {
                         table.addRow(
                                 Integer.valueOf(x.MaterialID())
                                         .toString(),
@@ -211,24 +178,11 @@ public class Inventory {
                     if (target2 == null) {
                         continue;
                     }
-                    Material newmaterial2 = InventoryFunctions.ModifyMaterialQuantity(wR, wW,
-                            InventoryFunctions.CreateMaterial(wR, wW));
+                    Material newmaterial2 = InventoryFunctions.ModifyMaterialQuantity(wR,wW,InventoryFunctions.CreateMaterial(wR, wW));
                     Server.Server.templatematerials.removeMaterial(target2);
                     Server.Server.templatematerials.addMaterial(newmaterial2);
                     continue;
-                case "9":
-                    String sortby = new Menu()
-                            .withTitle("Sorting settings")
-                            .withChoice("materialid", "Sort by material ID")
-                            .withChoice("lifespanstart", "Sort by start of lifespan")
-                            .withChoice("lifespanend", "Sort by end of lifespan")
-                            .withChoice("quantity", "Sort by quantity")
-                            .withChoice("valueperqty", "Sort by value per quantity")
-                            .withChoice("value", "Sort by value")
-                            .withChoice("none", "No sorting")
-                            .makeASelection(wW, wR);
-                    Inventory.sortby = sortby;
-                    continue;
+
                 case "b":
                     break;
 

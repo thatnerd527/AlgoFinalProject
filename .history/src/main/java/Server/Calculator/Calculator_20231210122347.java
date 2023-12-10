@@ -65,12 +65,6 @@ class Transaction {
         return new Transaction(transactionType, material.clone(), String.valueOf(id));
     }
 
-    @Override
-    public String toString() {
-        return String.format("Transaction: %s %s", transactionType, Integer.valueOf(material.MaterialID()).toString(), id);
-
-    }
-
 }
 
 class Totaller {
@@ -143,42 +137,6 @@ class InternalCalculator {
 
     private MaterialComposite built = new MaterialComposite();
 
-    private String sortby = "none";
-
-    private boolean comparator(Material a, Material b) {
-        switch (sortby) {
-            case "materialid":
-                return a.MaterialID() > b.MaterialID();
-            case "lifespanstart":
-                return a.lifespanStartUnixMilli > b.lifespanStartUnixMilli;
-            case "lifespanend":
-                return a.getLifespanStart().plusSeconds(a.lifespanInSeconds).getEpochSecond() > b.getLifespanStart().plusSeconds(b.lifespanInSeconds).getEpochSecond();
-            case "quantity":
-                return a.quantity > b.quantity;
-            case "valueperqty":
-                return a.getValuePerQty() > b.getValuePerQty();
-            case "value":
-                return a.getValue() > b.getValue();
-            default:
-                return false;
-        }
-    }
-
-    private void sortTable(Material array[]) {
-        if (sortby.equals("none"))
-            return;
-        int n = array.length;
-        for (int j = 1; j < n; j++) {
-            Material key = array[j];
-            int i = j - 1;
-            while ((i > -1) && comparator(array[i],key)) {
-                array[i + 1] = array[i];
-                i--;
-            }
-            array[i + 1] = key;
-        }
-    }
-
     // Get all of the materials that are required to build one unit of x, and if the
     // material is not present in the current database then also add it to the list,
     // it will go down to eventually materials that have no composite.
@@ -195,13 +153,7 @@ class InternalCalculator {
                 "Quantity",
                 "Life span start",
                 "Life span end");
-        Material[] mats = materialComposite.materials().toArray(new Material[0]);
-        sortTable(mats);
-        ArrayList<Material> result = new ArrayList<>();
-        for (Material material : mats) {
-            result.add(material);
-        }
-        result.stream().forEach(x -> {
+        materialComposite.materials().stream().forEach(x -> {
             table.addRow(
                     Integer.valueOf(x.MaterialID()).toString(),
                     x.name,
@@ -298,7 +250,6 @@ class InternalCalculator {
         while (true) {
             String action = new Menu()
                     .withTitle("Calculator")
-                    .withChoice("0.1","Sorting settings")
                     .withChoice("1.1", "Show items that are expired")
                     .withChoice("1.2", "Show purchased items")
                     .withChoice("1.3", "Show sold items")
@@ -313,19 +264,6 @@ class InternalCalculator {
                     .withChoice("b", "Back")
                     .makeASelection(wW, wR);
             switch (action) {
-                case "0.1":
-                    String sortby = new Menu()
-                            .withTitle("Sorting settings")
-                            .withChoice("materialid", "Sort by material ID")
-                            .withChoice("lifespanstart", "Sort by start of lifespan")
-                            .withChoice("lifespanend", "Sort by end of lifespan")
-                            .withChoice("quantity", "Sort by quantity")
-                            .withChoice("valueperqty", "Sort by value per quantity")
-                            .withChoice("value", "Sort by value")
-                            .withChoice("none", "No sorting")
-                            .makeASelection(wW, wR);
-                    this.sortby = sortby;
-                    continue;
                 case "1.1":
                     ShowExpiredItems(wW);
                     continue;
@@ -528,34 +466,12 @@ class InternalCalculator {
                     if (choice3.equals("Y")) {
                         while (true) {
                             String filename = new InputForm(wR, wW)
-                                    .withField("Filename", true).withTitle("Transaction log").receiveInput().get("Filename");
-                            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-                                writer.write("Expired items: \n");
-                                ShowExpiredItems(new WrappedWriter(writer));
-                                writer.write("Purchased items: \n");
-                                ShowPurchasedItems(new WrappedWriter(writer));
-                                writer.write("Sold items: \n");
-                                ShowSoldItems(new WrappedWriter(writer));
-                                writer.write("Stolen items: \n");
-                                ShowStolenItems(new WrappedWriter(writer));
-                                writer.write("Built items: \n");
-                                ShowBuiltItems(new WrappedWriter(writer));
-                                writer.write("Tabulated (after changes) items: \n");
-                                TablePrinter(TPS.crunchData(), new WrappedWriter(writer));
-                                writer.write("Net revenue: " + netRevenue + "\n");
-                                writer.write("Changes committed, thanks for using us for your business.\n");
-                                writer.write("Transaction log: \n");
-                                for (Transaction x : TPS.transactionList()) {
-                                    writer.write(x.toString() + "\n");
-                                }
-                                writer.close();
-                                break;
-
-                            } catch (IOException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                                continue;
-                            }
+                                .withField("Filename", true).withTitle("Calculator").receiveInput().get("Filename");
+                        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                         }
                     }
 

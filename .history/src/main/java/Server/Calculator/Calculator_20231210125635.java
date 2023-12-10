@@ -196,12 +196,7 @@ class InternalCalculator {
                 "Life span start",
                 "Life span end");
         Material[] mats = materialComposite.materials().toArray(new Material[0]);
-        sortTable(mats);
-        ArrayList<Material> result = new ArrayList<>();
-        for (Material material : mats) {
-            result.add(material);
-        }
-        result.stream().forEach(x -> {
+        .stream().forEach(x -> {
             table.addRow(
                     Integer.valueOf(x.MaterialID()).toString(),
                     x.name,
@@ -313,19 +308,6 @@ class InternalCalculator {
                     .withChoice("b", "Back")
                     .makeASelection(wW, wR);
             switch (action) {
-                case "0.1":
-                    String sortby = new Menu()
-                            .withTitle("Sorting settings")
-                            .withChoice("materialid", "Sort by material ID")
-                            .withChoice("lifespanstart", "Sort by start of lifespan")
-                            .withChoice("lifespanend", "Sort by end of lifespan")
-                            .withChoice("quantity", "Sort by quantity")
-                            .withChoice("valueperqty", "Sort by value per quantity")
-                            .withChoice("value", "Sort by value")
-                            .withChoice("none", "No sorting")
-                            .makeASelection(wW, wR);
-                    this.sortby = sortby;
-                    continue;
                 case "1.1":
                     ShowExpiredItems(wW);
                     continue;
