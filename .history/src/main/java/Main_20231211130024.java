@@ -77,7 +77,7 @@ class Main {
         return;
       }
     }
-   // Server.StaticInit();
+    Server.StaticInit();
    // Connect("localhost", "none");
 
     while (true) {
