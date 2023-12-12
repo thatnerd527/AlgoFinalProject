@@ -512,7 +512,7 @@ class InternalCalculator {
                             .withChoice("N", "No")
                             .makeASelection(wW, wR);
                     if (choice2.equals("Y")) {
-                        Server.currentlystored.setMaterials(TPS.crunchData().materials());
+                        Server.currentlystored.setMaterials();aterials(TPS.crunchData().materials());
                         Server.SaveAll();
                         wW.write("Changes committed, thanks for using us for your business.\n");
                     } else {

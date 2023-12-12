@@ -559,7 +559,7 @@ class InternalCalculator {
 
                     continue;
                 case "b":
-                    return;
+                    
 
                 default:
                     continue;

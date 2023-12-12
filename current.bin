@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="1.8.0_352" class="java.beans.XMLDecoder">
+<java version="11.0.21" class="java.beans.XMLDecoder">
  <object class="Material.MaterialDatabase" id="MaterialDatabase0">
   <void id="ArrayList0" property="materials">
    <void method="add">
@@ -8,35 +8,42 @@
       <string>name</string>
       <void method="set">
        <object idref="Material0"/>
-       <string>okokok</string>
+       <string>Babi goreng ko made</string>
       </void>
      </void>
      <void class="Material.Material" method="getField">
       <string>description</string>
       <void method="set">
        <object idref="Material0"/>
-       <string>dkaodsdokd</string>
+       <string>Fadlan ganteng</string>
+      </void>
+     </void>
+     <void class="Material.Material" method="getField">
+      <string>overrideValue</string>
+      <void method="set">
+       <object idref="Material0"/>
+       <double>20000.0</double>
       </void>
      </void>
      <void class="Material.Material" method="getField">
       <string>quantity</string>
       <void method="set">
        <object idref="Material0"/>
-       <double>1000.0</double>
+       <double>432.0</double>
       </void>
      </void>
      <void class="Material.Material" method="getField">
       <string>lifespanInSeconds</string>
       <void method="set">
        <object idref="Material0"/>
-       <long>86400</long>
+       <long>36143229</long>
       </void>
      </void>
      <void class="Material.Material" method="getField">
       <string>lifespanStartUnixMilli</string>
       <void method="set">
        <object idref="Material0"/>
-       <long>1702054800000</long>
+       <long>1702285971292</long>
       </void>
      </void>
      <void id="MaterialComposite0" property="composite"/>
@@ -44,53 +51,7 @@
       <object idref="MaterialComposite0"/>
      </void>
      <void property="valuePerQty">
-      <double>1000.0</double>
-     </void>
-    </object>
-   </void>
-   <void method="add">
-    <object class="Material.Material" id="Material1">
-     <void class="Material.Material" method="getField">
-      <string>name</string>
-      <void method="set">
-       <object idref="Material1"/>
-       <string>okokok</string>
-      </void>
-     </void>
-     <void class="Material.Material" method="getField">
-      <string>description</string>
-      <void method="set">
-       <object idref="Material1"/>
-       <string>dkaodsdokd</string>
-      </void>
-     </void>
-     <void class="Material.Material" method="getField">
-      <string>quantity</string>
-      <void method="set">
-       <object idref="Material1"/>
-       <double>900000.0</double>
-      </void>
-     </void>
-     <void class="Material.Material" method="getField">
-      <string>lifespanInSeconds</string>
-      <void method="set">
-       <object idref="Material1"/>
-       <long>86400</long>
-      </void>
-     </void>
-     <void class="Material.Material" method="getField">
-      <string>lifespanStartUnixMilli</string>
-      <void method="set">
-       <object idref="Material1"/>
-       <long>1702054800000</long>
-      </void>
-     </void>
-     <void id="MaterialComposite1" property="composite"/>
-     <void property="composite">
-      <object idref="MaterialComposite1"/>
-     </void>
-     <void property="valuePerQty">
-      <double>1000.0</double>
+      <double>20000.0</double>
      </void>
     </object>
    </void>

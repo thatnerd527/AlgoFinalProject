@@ -1,11 +1,5 @@
 package Server.Calculator;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -17,7 +11,6 @@ import Material.MaterialComposite;
 import Server.Server;
 import Server.WrappedReader;
 import Server.WrappedWriter;
-import Server.Inventory.InventoryFunctions;
 import UI.InputForm;
 import UI.Menu;
 import UI.Table;
@@ -559,7 +552,7 @@ class InternalCalculator {
 
                     continue;
                 case "b":
-                    return;
+                    
 
                 default:
                     continue;

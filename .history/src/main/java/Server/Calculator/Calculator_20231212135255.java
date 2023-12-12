@@ -558,9 +558,7 @@ class InternalCalculator {
                     }
 
                     continue;
-                case "b":
-                    return;
-
+                case
                 default:
                     continue;
             }
