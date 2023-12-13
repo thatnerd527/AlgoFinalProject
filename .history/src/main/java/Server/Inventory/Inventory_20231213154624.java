@@ -205,7 +205,6 @@ public class Inventory {
                     Material newmaterial = InventoryFunctions.CreateMaterial(wR, wW);
                     Server.Server.templatematerials.removeMaterial(target);
                     Server.Server.templatematerials.addMaterial(newmaterial);
-                    Server.Server.SaveAll();
                     continue;
                 case "8":
                     Material target2 = InventoryFunctions.GetInStockMaterial(wR, wW);
@@ -216,7 +215,6 @@ public class Inventory {
                             InventoryFunctions.CreateMaterial(wR, wW));
                     Server.Server.templatematerials.removeMaterial(target2);
                     Server.Server.templatematerials.addMaterial(newmaterial2);
-                    Server.Server.SaveAll();
                     continue;
                 case "9":
                     String sortby = new Menu()

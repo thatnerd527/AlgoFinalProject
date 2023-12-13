@@ -41,7 +41,6 @@ class Sandbox {
 enum TransactionType {
     ADD,
     REMOVE,
-    EXTCHANGE
 }
 
 class Transaction {
@@ -66,8 +65,7 @@ class Transaction {
 
     @Override
     public String toString() {
-        return String.format("Transaction: %s %s", transactionType, Integer.valueOf(material.MaterialID()).toString(),
-                id);
+        return String.format("Transaction: %s %s", transactionType, Integer.valueOf(material.MaterialID()).toString(), id);
 
     }
 
@@ -127,22 +125,6 @@ class Totaller {
         return clone;
     }
 
-    MaterialComposite crunchData(boolean removenegative) {
-        MaterialComposite clone = materialComposite.clone();
-        transactions.stream().forEach(x -> {
-            if (x.material.getValuePerQty() < 0 && removenegative) {
-                return;
-            }
-            if (x.transactionType == TransactionType.ADD) {
-                x.material.oneshotMetadata = x.id;
-                clone.addMaterial(x.material);
-            } else if (x.transactionType == TransactionType.REMOVE) {
-                clone.removeMaterial(x.material);
-            }
-        });
-        return clone;
-    }
-
 }
 
 class InternalCalculator {
@@ -168,8 +150,7 @@ class InternalCalculator {
             case "lifespanstart":
                 return a.lifespanStartUnixMilli > b.lifespanStartUnixMilli;
             case "lifespanend":
-                return a.getLifespanStart().plusSeconds(a.lifespanInSeconds).getEpochSecond() > b.getLifespanStart()
-                        .plusSeconds(b.lifespanInSeconds).getEpochSecond();
+                return a.getLifespanStart().plusSeconds(a.lifespanInSeconds).getEpochSecond() > b.getLifespanStart().plusSeconds(b.lifespanInSeconds).getEpochSecond();
             case "quantity":
                 return a.quantity > b.quantity;
             case "valueperqty":
@@ -188,7 +169,7 @@ class InternalCalculator {
         for (int j = 1; j < n; j++) {
             Material key = array[j];
             int i = j - 1;
-            while ((i > -1) && comparator(array[i], key)) {
+            while ((i > -1) && comparator(array[i],key)) {
                 array[i + 1] = array[i];
                 i--;
             }
@@ -227,8 +208,8 @@ class InternalCalculator {
                     x.differentiator,
                     ((Double) x.getValuePerQty()).toString(),
                     ((Double) x.quantity).toString(),
-                    x.lifespanInSeconds > 0 ? x.getLifespanStart().toString() : "",
-                    x.lifespanInSeconds > 0 ? x.getLifespanStart().plusSeconds(x.lifespanInSeconds).toString() : "");
+                    x.getLifespanStart().toString(),
+                    x.getLifespanStart().plusSeconds(x.lifespanInSeconds).toString());
         });
         wW.write(Table.getPrintedTable(table, true) + "\n");
     }
@@ -248,7 +229,7 @@ class InternalCalculator {
     double ShowPurchasedItems(WrappedWriter wW) {
         TablePrinter(purchased, wW);
         Sandbox sandbox4 = new Sandbox(0);
-        purchased.materials().stream().forEach(x -> {
+        built.materials().stream().forEach(x -> {
             sandbox4.setCurrentValue(sandbox4.getCurrentValue() + x.getValue());
         });
         wW.write("Total value of purchased items: " + sandbox4.getCurrentValue() + "\n");
@@ -315,7 +296,7 @@ class InternalCalculator {
         while (true) {
             String action = new Menu()
                     .withTitle("Calculator")
-                    .withChoice("0.1", "Sorting settings")
+                    .withChoice("0.1","Sorting settings")
                     .withChoice("1.1", "Show items that are expired")
                     .withChoice("1.2", "Show purchased items")
                     .withChoice("1.3", "Show sold items")
@@ -382,27 +363,13 @@ class InternalCalculator {
                     continue;
                 case "2.2":
                     while (true) {
-                        Material inStockFromTemplate = null;
-                        String newitemtype = new Menu().withTitle("Was a new item type purchased?")
-                                .withChoice("Y", "Yes")
-                                .withChoice("N", "No")
-                                .makeASelection(wW, wR);
-                        if (newitemtype.equals("Y")) {
-                            inStockFromTemplate = InventoryFunctions.CreateMaterial(wR, wW);
-                            inStockFromTemplate = InventoryFunctions.ModifyMaterialQuantity(wR, wW,
-                                    inStockFromTemplate);
-                        } else {
-                            inStockFromTemplate = InventoryFunctions.GetTemplateMaterial(wR, wW);
-                            if (inStockFromTemplate == null) {
-                                break;
-                            }
-                            inStockFromTemplate = InventoryFunctions.ModifyMaterialQuantity(wR, wW,
-                                    inStockFromTemplate);
-                            inStockFromTemplate = InventoryFunctions.ModifyMaterialCost(wR, wW, inStockFromTemplate);
-
+                        Material inStockFromTemplate = InventoryFunctions.GetTemplateMaterial(wR, wW);
+                        if (inStockFromTemplate == null) {
+                            break;
                         }
+                        inStockFromTemplate = InventoryFunctions.ModifyMaterialQuantity(wR, wW, inStockFromTemplate);
+                        inStockFromTemplate = InventoryFunctions.ModifyMaterialCost(wR, wW, inStockFromTemplate);
                         Instant startLifespan = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant();
-
                         if (inStockFromTemplate.lifespanInSeconds > 0) {
                             boolean specifyStart = new Menu()
                                     .withTitle("Change the item's start lifespan?")
@@ -415,17 +382,6 @@ class InternalCalculator {
                             inStockFromTemplate.setLifespanStart(startLifespan);
 
                         }
-
-                        if (newitemtype.equals("Y")) {
-                            String addtotemplateitems = new Menu().withTitle("Add this item to template items?")
-                                    .withChoice("Y", "Yes")
-                                    .withChoice("N", "No")
-                                    .makeASelection(wW, wR);
-                            if (addtotemplateitems.equals("Y")) {
-                                TPS.addTransaction(new Transaction(TransactionType.EXTCHANGE, inStockFromTemplate,
-                                        "addtotemplate_" + inStockFromTemplate.MaterialID()));
-                            }
-                        }
                         purchased.addMaterial(inStockFromTemplate);
 
                         TPS.addTransaction(new Transaction(TransactionType.ADD, inStockFromTemplate,
@@ -437,21 +393,12 @@ class InternalCalculator {
                     continue;
                 case "2.3":
                     while (true) {
-                        Material inStockFromTemplate = InventoryFunctions.GetInStockMaterial(wR, wW, TPS.crunchData());
+                        Material inStockFromTemplate = InventoryFunctions.GetInStockMaterial(wR, wW);
                         if (inStockFromTemplate == null) {
                             break;
                         }
-                        if (inStockFromTemplate.overrideValue == 0) {
-                            inStockFromTemplate = InventoryFunctions.ModifyMaterialQuantity(wR, wW,
-                                    inStockFromTemplate);
-                        }
-                        Material previous = inStockFromTemplate.clone();
-
+                        inStockFromTemplate = InventoryFunctions.ModifyMaterialQuantity(wR, wW, inStockFromTemplate);
                         inStockFromTemplate = InventoryFunctions.ModifyMaterialCost(wR, wW, inStockFromTemplate);
-                        boolean changedCost = false;
-                        if (inStockFromTemplate.MaterialID() != previous.MaterialID()) {
-                            changedCost = true;
-                        }
                         if (inStockFromTemplate.isExpired()) {
                             String choice2 = new Menu()
                                     .withTitle("This item is expired, are you sure you want to sell it?")
@@ -464,30 +411,8 @@ class InternalCalculator {
                             }
                         }
                         sold.addMaterial(inStockFromTemplate);
-                        if (changedCost) {
-                            // first we remove however much of the item we want to sell at its original
-                            // price;
-                            TPS.addTransaction(new Transaction(TransactionType.REMOVE, previous,
-                                    "sell_" + previous.MaterialID()));
-                            double moneychange = inStockFromTemplate.getValue() - previous.getValue();
-
-                            // then we add a "fake item" that we bought for the change
-                            // if we made profit then its negative, else then positive;
-                            Material temp = previous.clone();
-                            temp.quantity = 1;
-                            temp.overrideValue = 0;
-                            temp.setValuePerQty(-moneychange);
-                            temp.name = "An item to calculate profit for Material ID: " + previous.MaterialID();
-                            temp.differentiator = "" + previous.MaterialID();
-                            purchased.addMaterial(temp);
-                            TPS.addTransaction(new Transaction(TransactionType.ADD, temp,
-                                    "purchase_" + temp.MaterialID()));
-
-                        } else {
-                            TPS.addTransaction(new Transaction(TransactionType.REMOVE, inStockFromTemplate,
-                                    "sell_" + inStockFromTemplate.MaterialID()));
-                        }
-
+                        TPS.addTransaction(new Transaction(TransactionType.REMOVE, inStockFromTemplate,
+                                "sell_" + inStockFromTemplate.MaterialID()));
                         wW.write("Added material to sold.\n");
                         break;
 
@@ -495,7 +420,7 @@ class InternalCalculator {
                     continue;
                 case "2.4":
                     while (true) {
-                        Material inStockFromTemplate = InventoryFunctions.GetInStockMaterial(wR, wW, TPS.crunchData());
+                        Material inStockFromTemplate = InventoryFunctions.GetInStockMaterial(wR, wW);
                         if (inStockFromTemplate == null) {
                             break;
                         }
@@ -565,6 +490,7 @@ class InternalCalculator {
                             if (x.id.startsWith("purchase_")) {
                                 netRevenue -= x.material.getValue();
                             }
+
                         }
                     }
                     wW.write("Expired items: \n");
@@ -586,15 +512,7 @@ class InternalCalculator {
                             .withChoice("N", "No")
                             .makeASelection(wW, wR);
                     if (choice2.equals("Y")) {
-                        Server.currentlystored.setMaterials(TPS.crunchData(true).materials());
-                        Totaller temp = new Totaller(Server.templatematerials);
-                        TPS.transactionList().stream().filter(x -> x.transactionType == TransactionType.EXTCHANGE
-                                && x.id.startsWith("addtotemplate_"))
-                                .forEach(x -> {
-                                    x.material.quantity = 0;
-                                    temp.addTransaction(new Transaction(TransactionType.ADD, x.material));
-                                });
-                        Server.templatematerials.setMaterials(temp.crunchData().materials());
+                        Server.currentlystored.setMaterials(TPS.crunchData().materials());
                         Server.SaveAll();
                         wW.write("Changes committed, thanks for using us for your business.\n");
                     } else {
@@ -608,8 +526,7 @@ class InternalCalculator {
                     if (choice3.equals("Y")) {
                         while (true) {
                             String filename = new InputForm(wR, wW)
-                                    .withField("Filename", true).withTitle("Transaction log").receiveInput()
-                                    .get("Filename");
+                                    .withField("Filename", true).withTitle("Transaction log").receiveInput().get("Filename");
                             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
                                 writer.write("Expired items: \n");
                                 ShowExpiredItems(new WrappedWriter(writer));

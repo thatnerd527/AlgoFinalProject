@@ -127,22 +127,6 @@ class Totaller {
         return clone;
     }
 
-    MaterialComposite crunchData(boolean removenegative) {
-        MaterialComposite clone = materialComposite.clone();
-        transactions.stream().forEach(x -> {
-            if (x.material.getValuePerQty() < 0 && removenegative) {
-                return;
-            }
-            if (x.transactionType == TransactionType.ADD) {
-                x.material.oneshotMetadata = x.id;
-                clone.addMaterial(x.material);
-            } else if (x.transactionType == TransactionType.REMOVE) {
-                clone.removeMaterial(x.material);
-            }
-        });
-        return clone;
-    }
-
 }
 
 class InternalCalculator {
@@ -465,27 +449,26 @@ class InternalCalculator {
                         }
                         sold.addMaterial(inStockFromTemplate);
                         if (changedCost) {
-                            // first we remove however much of the item we want to sell at its original
-                            // price;
+                            // first we remove however much of the item we want to sell at its original price;
                             TPS.addTransaction(new Transaction(TransactionType.REMOVE, previous,
                                     "sell_" + previous.MaterialID()));
                             double moneychange = inStockFromTemplate.getValue() - previous.getValue();
 
-                            // then we add a "fake item" that we bought for the change
-                            // if we made profit then its negative, else then positive;
-                            Material temp = previous.clone();
-                            temp.quantity = 1;
-                            temp.overrideValue = 0;
-                            temp.setValuePerQty(-moneychange);
-                            temp.name = "An item to calculate profit for Material ID: " + previous.MaterialID();
-                            temp.differentiator = "" + previous.MaterialID();
-                            purchased.addMaterial(temp);
-                            TPS.addTransaction(new Transaction(TransactionType.ADD, temp,
-                                    "purchase_" + temp.MaterialID()));
+
+                                // then we add a "fake item" that we bought for the change
+                                // if we made profit then its negative, else then positive;
+                                Material temp = previous.clone();
+                                temp.overrideValue = -moneychange;
+                                temp.name = "An item to calculate profit for Material ID: " + previous.MaterialID();
+                                purchased.addMaterial(temp);
+                                TPS.addTransaction(new Transaction(TransactionType.ADD, temp,
+                                        "purchase_" + temp.MaterialID()));
+                            
+
 
                         } else {
                             TPS.addTransaction(new Transaction(TransactionType.REMOVE, inStockFromTemplate,
-                                    "sell_" + inStockFromTemplate.MaterialID()));
+                                "sell_" + inStockFromTemplate.MaterialID()));
                         }
 
                         wW.write("Added material to sold.\n");
@@ -565,6 +548,7 @@ class InternalCalculator {
                             if (x.id.startsWith("purchase_")) {
                                 netRevenue -= x.material.getValue();
                             }
+
                         }
                     }
                     wW.write("Expired items: \n");
@@ -586,7 +570,7 @@ class InternalCalculator {
                             .withChoice("N", "No")
                             .makeASelection(wW, wR);
                     if (choice2.equals("Y")) {
-                        Server.currentlystored.setMaterials(TPS.crunchData(true).materials());
+                        Server.currentlystored.setMaterials(TPS.crunchData().materials());
                         Totaller temp = new Totaller(Server.templatematerials);
                         TPS.transactionList().stream().filter(x -> x.transactionType == TransactionType.EXTCHANGE
                                 && x.id.startsWith("addtotemplate_"))

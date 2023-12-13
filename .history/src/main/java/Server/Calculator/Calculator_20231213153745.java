@@ -127,22 +127,6 @@ class Totaller {
         return clone;
     }
 
-    MaterialComposite crunchData(boolean removenegative) {
-        MaterialComposite clone = materialComposite.clone();
-        transactions.stream().forEach(x -> {
-            if (x.material.getValuePerQty() < 0 && removenegative) {
-                return;
-            }
-            if (x.transactionType == TransactionType.ADD) {
-                x.material.oneshotMetadata = x.id;
-                clone.addMaterial(x.material);
-            } else if (x.transactionType == TransactionType.REMOVE) {
-                clone.removeMaterial(x.material);
-            }
-        });
-        return clone;
-    }
-
 }
 
 class InternalCalculator {
@@ -445,13 +429,7 @@ class InternalCalculator {
                             inStockFromTemplate = InventoryFunctions.ModifyMaterialQuantity(wR, wW,
                                     inStockFromTemplate);
                         }
-                        Material previous = inStockFromTemplate.clone();
-
                         inStockFromTemplate = InventoryFunctions.ModifyMaterialCost(wR, wW, inStockFromTemplate);
-                        boolean changedCost = false;
-                        if (inStockFromTemplate.MaterialID() != previous.MaterialID()) {
-                            changedCost = true;
-                        }
                         if (inStockFromTemplate.isExpired()) {
                             String choice2 = new Menu()
                                     .withTitle("This item is expired, are you sure you want to sell it?")
@@ -464,30 +442,8 @@ class InternalCalculator {
                             }
                         }
                         sold.addMaterial(inStockFromTemplate);
-                        if (changedCost) {
-                            // first we remove however much of the item we want to sell at its original
-                            // price;
-                            TPS.addTransaction(new Transaction(TransactionType.REMOVE, previous,
-                                    "sell_" + previous.MaterialID()));
-                            double moneychange = inStockFromTemplate.getValue() - previous.getValue();
-
-                            // then we add a "fake item" that we bought for the change
-                            // if we made profit then its negative, else then positive;
-                            Material temp = previous.clone();
-                            temp.quantity = 1;
-                            temp.overrideValue = 0;
-                            temp.setValuePerQty(-moneychange);
-                            temp.name = "An item to calculate profit for Material ID: " + previous.MaterialID();
-                            temp.differentiator = "" + previous.MaterialID();
-                            purchased.addMaterial(temp);
-                            TPS.addTransaction(new Transaction(TransactionType.ADD, temp,
-                                    "purchase_" + temp.MaterialID()));
-
-                        } else {
-                            TPS.addTransaction(new Transaction(TransactionType.REMOVE, inStockFromTemplate,
-                                    "sell_" + inStockFromTemplate.MaterialID()));
-                        }
-
+                        TPS.addTransaction(new Transaction(TransactionType.REMOVE, inStockFromTemplate,
+                                "sell_" + inStockFromTemplate.MaterialID()));
                         wW.write("Added material to sold.\n");
                         break;
 
@@ -565,6 +521,11 @@ class InternalCalculator {
                             if (x.id.startsWith("purchase_")) {
                                 netRevenue -= x.material.getValue();
                             }
+
+                        } else if (x.transactionType == TransactionType.EXTCHANGE) {
+                            if (x.id.startsWith("addtotemplate_")) {
+                                netRevenue -= x.material.getValue();
+                            }
                         }
                     }
                     wW.write("Expired items: \n");
@@ -586,15 +547,7 @@ class InternalCalculator {
                             .withChoice("N", "No")
                             .makeASelection(wW, wR);
                     if (choice2.equals("Y")) {
-                        Server.currentlystored.setMaterials(TPS.crunchData(true).materials());
-                        Totaller temp = new Totaller(Server.templatematerials);
-                        TPS.transactionList().stream().filter(x -> x.transactionType == TransactionType.EXTCHANGE
-                                && x.id.startsWith("addtotemplate_"))
-                                .forEach(x -> {
-                                    x.material.quantity = 0;
-                                    temp.addTransaction(new Transaction(TransactionType.ADD, x.material));
-                                });
-                        Server.templatematerials.setMaterials(temp.crunchData().materials());
+                        Server.currentlystored.setMaterials(TPS.crunchData().materials());
                         Server.SaveAll();
                         wW.write("Changes committed, thanks for using us for your business.\n");
                     } else {

@@ -19,9 +19,9 @@ public class MaterialComposite implements Serializable {
         for (int i = 0; i < materials.size(); i++) {
             if (materials.get(i).MaterialID() == material.MaterialID()) {
                 Material tmpclone = materials.get(i).clone();
-                tmpclone.quantity = tmpclone.quantity + material.clone().quantity;
+                tmpclone.quantity = tmpclone.quantity + material.quantity;
                 materials.set(i, tmpclone);
-                // materials.get(i).quantity += material.quantity;
+               // materials.get(i).quantity += material.quantity;
                 return;
             }
         }
@@ -31,9 +31,7 @@ public class MaterialComposite implements Serializable {
     public void removeMaterial(Material material) {
         for (int i = 0; i < materials.size(); i++) {
             if (materials.get(i).MaterialID() == material.MaterialID()) {
-                Material tmpclone = materials.get(i).clone();
-                tmpclone.quantity = tmpclone.quantity - material.clone().quantity;
-                materials.set(i, tmpclone);
+                materials.get(i).quantity -= material.quantity;
                 if (materials.get(i).quantity <= 0) {
                     materials.remove(i);
                 }
@@ -42,6 +40,25 @@ public class MaterialComposite implements Serializable {
         }
         throw new RuntimeException("Material not found");
     }
+
+    public void removeMaterial(int id, double quantity) {
+        for (int i = 0; i < materials.size(); i++) {
+            if (materials.get(i).MaterialID() == id) {
+                if (quantity <= 0) {
+                    materials.remove(i);
+                    return;
+                }
+                materials.get(i).quantity -= quantity;
+                if (materials.get(i).quantity <= 0) {
+                    materials.remove(i);
+                }
+                return;
+            }
+        }
+        throw new RuntimeException("Material not found");
+    }
+
+    
 
     public synchronized byte[] save() {
         try {
@@ -60,7 +77,8 @@ public class MaterialComposite implements Serializable {
     }
 
     public synchronized static MaterialComposite load(byte[] loadfrom) throws IOException, ClassNotFoundException {
-        XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(loadfrom));
+        XMLDecoder decoder =
+            new XMLDecoder(new ByteArrayInputStream(loadfrom));
         return (MaterialComposite) decoder.readObject();
     }
 

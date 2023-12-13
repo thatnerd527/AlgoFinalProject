@@ -127,22 +127,6 @@ class Totaller {
         return clone;
     }
 
-    MaterialComposite crunchData(boolean removenegative) {
-        MaterialComposite clone = materialComposite.clone();
-        transactions.stream().forEach(x -> {
-            if (x.material.getValuePerQty() < 0 && removenegative) {
-                return;
-            }
-            if (x.transactionType == TransactionType.ADD) {
-                x.material.oneshotMetadata = x.id;
-                clone.addMaterial(x.material);
-            } else if (x.transactionType == TransactionType.REMOVE) {
-                clone.removeMaterial(x.material);
-            }
-        });
-        return clone;
-    }
-
 }
 
 class InternalCalculator {
@@ -475,7 +459,6 @@ class InternalCalculator {
                             // if we made profit then its negative, else then positive;
                             Material temp = previous.clone();
                             temp.quantity = 1;
-                            temp.overrideValue = 0;
                             temp.setValuePerQty(-moneychange);
                             temp.name = "An item to calculate profit for Material ID: " + previous.MaterialID();
                             temp.differentiator = "" + previous.MaterialID();
@@ -586,7 +569,7 @@ class InternalCalculator {
                             .withChoice("N", "No")
                             .makeASelection(wW, wR);
                     if (choice2.equals("Y")) {
-                        Server.currentlystored.setMaterials(TPS.crunchData(true).materials());
+                        Server.currentlystored.setMaterials(TPS.crunchData().materials());
                         Totaller temp = new Totaller(Server.templatematerials);
                         TPS.transactionList().stream().filter(x -> x.transactionType == TransactionType.EXTCHANGE
                                 && x.id.startsWith("addtotemplate_"))
