@@ -198,7 +198,7 @@ public class InventoryFunctions {
                                 }
                                 getmat.get().quantity = Double.valueOf(result2.get("Amount (above 0)"));
                                 composite.addMaterial(getmat.get());
-                                break;
+                                break
                             }
                             continue;
                         case "-":
@@ -228,7 +228,6 @@ public class InventoryFunctions {
                                 }
                                 getmat.get().quantity = Double.valueOf(result2.get("Amount (above 0)"));
                                 composite.removeMaterial(getmat.get());
-                                break;
                             }
                             continue;
                         case "F":

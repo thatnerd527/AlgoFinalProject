@@ -2,7 +2,6 @@ package Server.MaterialCalculator;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
 import Material.Material;
 import Material.MaterialComposite;
@@ -27,8 +26,6 @@ public class MaterialC {
                 "Quantity",
                 "Life span start",
                 "Life span end");
-                DateTimeFormatter formatter = DateTimeFormatter
-                .ofPattern("uuuu-MM-dd");
         materialComposite.materials().stream().forEach(x -> {
             table.addRow(
                     Integer.valueOf(x.MaterialID()).toString(),
@@ -43,7 +40,7 @@ public class MaterialC {
                                         .format(formatter) : "",
                                 x.lifespanInSeconds > 0 ? LocalDateTime
                                         .ofInstant(x.getLifespanStart().plusSeconds(x.lifespanInSeconds),ZoneOffset.systemDefault())
-                                        .format(formatter) : "");
+                                        .format(formatter) : ""));
         });
         wW.write(Table.getPrintedTable(table, true) + "\n");
     }

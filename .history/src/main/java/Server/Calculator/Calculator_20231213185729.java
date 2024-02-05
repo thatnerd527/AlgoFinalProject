@@ -222,7 +222,7 @@ class InternalCalculator {
             result.add(material);
         }
         DateTimeFormatter formatter = DateTimeFormatter
-                .ofPattern("uuuu-MM-dd");
+        .ofPattern("uuuu-MM-dd")
         result.stream().forEach(x -> {
             table.addRow(
                     Integer.valueOf(x.MaterialID()).toString(),

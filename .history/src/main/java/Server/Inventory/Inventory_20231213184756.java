@@ -93,12 +93,16 @@ public class Inventory {
                         result2.add(material);
                     }
 
-                    DateTimeFormatter formatter = DateTimeFormatter
-                            .ofPattern("uuuu-MM-dd")
 
-                    // Fails for current time with error 'Field DayOfYear cannot be printed as the
-                    // value 148 exceeds the maximum print width of 2'
-                    ;
+                    DateTimeFormatter formatter = DateTimeFormatter
+        .ofPattern("YYYY-MM-DD'T'hh:mm'Z'")
+        .withZone(ZoneOffset.UTC);
+
+// Fails for current time with error 'Field DayOfYear cannot be printed as the 
+// value 148 exceeds the maximum print width of 2'
+LocalDateTime 
+      .ofInstant(Instant.now(), ZoneOffset.UTC)
+      .format(formatter);
 
                     result2.forEach(x -> {
                         table.addRow(
@@ -111,12 +115,8 @@ public class Inventory {
                                 ((Double) x
                                         .getValuePerQty()).toString(),
                                 ((Double) x.quantity).toString(),
-                                x.lifespanInSeconds > 0 ? LocalDateTime
-                                        .ofInstant(x.getLifespanStart(), ZoneOffset.systemDefault())
-                                        .format(formatter) : "",
-                                x.lifespanInSeconds > 0 ? LocalDateTime
-                                        .ofInstant(x.getLifespanStart().plusSeconds(x.lifespanInSeconds),ZoneOffset.systemDefault())
-                                        .format(formatter) : "",
+                    x.lifespanInSeconds > 0 ? x.getLifespanStart().toString() : "",
+                    x.lifespanInSeconds > 0 ? x.getLifespanStart().plusSeconds(x.lifespanInSeconds).toString() : "",
                                 x.lifespanInSeconds > 0 ? x.isExpired().toString() : "");
                     });
                     wW.write(Table.getPrintedTable(table, true) + "\n");

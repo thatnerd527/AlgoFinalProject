@@ -5,10 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -221,8 +218,6 @@ class InternalCalculator {
         for (Material material : mats) {
             result.add(material);
         }
-        DateTimeFormatter formatter = DateTimeFormatter
-                .ofPattern("uuuu-MM-dd");
         result.stream().forEach(x -> {
             table.addRow(
                     Integer.valueOf(x.MaterialID()).toString(),
@@ -232,12 +227,8 @@ class InternalCalculator {
                     x.differentiator,
                     ((Double) x.getValuePerQty()).toString(),
                     ((Double) x.quantity).toString(),
-                                x.lifespanInSeconds > 0 ? LocalDateTime
-                                        .ofInstant(x.getLifespanStart(), ZoneOffset.systemDefault())
-                                        .format(formatter) : "",
-                                x.lifespanInSeconds > 0 ? LocalDateTime
-                                        .ofInstant(x.getLifespanStart().plusSeconds(x.lifespanInSeconds),ZoneOffset.systemDefault())
-                                        .format(formatter) : "");
+                    x.lifespanInSeconds > 0 ? x.getLifespanStart().toString() : "",
+                    x.lifespanInSeconds > 0 ? x.getLifespanStart().plusSeconds(x.lifespanInSeconds).toString() : "");
         });
         wW.write(Table.getPrintedTable(table, true) + "\n");
     }
